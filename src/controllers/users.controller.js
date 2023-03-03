@@ -29,7 +29,41 @@ const getUserDetails = async (req, res) => {
     };
 };
 
+const addUsers = async (req, res) => {
+    try {
+        const { body } = req;
+        const result = await usersModel.addUsers(body);
+        res.status(201).json({
+            msg: "Add Data User Success",
+            data: result.rows,
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal Server Error",
+        });
+    };
+};
+
+const editUser = async (req, res) => {
+    try {
+        const { body } = req;
+        const result = await usersModel.editUser(body);
+        res.status(201).json({
+            msg: "Update Data User Success",
+            data: result.rows,
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal Server Error",
+        });
+    };
+}
+
 module.exports = {
     getUsers,
     getUserDetails,
+    addUsers,
+    editUser,
 };
