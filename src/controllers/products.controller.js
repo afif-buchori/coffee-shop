@@ -18,7 +18,7 @@ const getProducts = async (req, res) => {
 const getProductDetails = async (req, res) => {
     try {
         const { params } = req;
-        const result = await productsModel.getDetailProduct(params);
+        const result = await productsModel.getProductDetails(params);
         res.status(200).json({
             data: result.rows,
         });
@@ -28,7 +28,7 @@ const getProductDetails = async (req, res) => {
             msg: "Interna Server Error",
         });
     };
-}
+};
 
 const addProducts = async (req, res) => {
     try {
@@ -44,7 +44,7 @@ const addProducts = async (req, res) => {
             msg: "Interna Server Error",
         });
     };
-}
+};
 
 const editProducts = async (req, res) => {
     try {
@@ -57,14 +57,45 @@ const editProducts = async (req, res) => {
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
+            msg: "Internal Server Error",
+        });
+    };
+};
+
+const deleteProduct = async (req, res) => {
+    try {
+        const { params } = req;
+        const result = await productsModel.deleteProduct(params);
+        res.status(201).json({
+            msg: "DELETE data Success",
+            data: result.rows,
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal Server Error",
+        });
+    };
+};
+
+const showProdImage = async (req, res) => {
+    try {
+        const { params } = req;
+        const result = await productsModel.showProdImage(params);
+        res.status(200).static('E:/PICTURE/IMG_0385.JPG');
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
             msg: "Interna Server Error",
         });
     };
-}
+};
 
 module.exports = {
     getProducts,
     getProductDetails,
     addProducts,
     editProducts,
+    deleteProduct,
+    showProdImage,
 };

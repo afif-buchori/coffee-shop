@@ -1,6 +1,5 @@
 const db = require("../configs/postgre");
 
-
 const getProducts = (info) => {
     return new Promise((resolve, reject) => {
         let showData = "SELECT id, prod_name, price, prod_picture FROM products ORDER BY ";
@@ -34,7 +33,7 @@ const getProductDetails =  (info) => {
             resolve(result);
         });
     })
-}
+};
 
 const addProducts = (data) => {
     return new Promise((resolve, reject) => {
@@ -64,11 +63,40 @@ const editProducts = (data) => {
             resolve(result);
         });
     })
-}
+};
+
+const deleteProduct = (info) => {
+    return new Promise((resolve, reject) => {
+        const values = [info.deleteId];
+        db.query("DELETE FROM products WHERE id = $1", values, (error, result) => {
+            if(error) {
+                reject(error);
+                return;
+            }
+            resolve(result);
+        });
+    });
+};
+
+const showProdImage= (info) => {
+    return new Promise((resolve, reject) => {
+        let showData = "SELECT prod_picture FROM products WHERE id = $1";
+        const values = [info.productId];
+        db.query(showData, values, (error, result) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve(result);
+        });
+    });
+};
 
 module.exports = {
     getProducts,
     getProductDetails,
     addProducts,
     editProducts,
+    deleteProduct,
+    showProdImage,
 };
