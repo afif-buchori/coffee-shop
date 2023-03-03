@@ -1,22 +1,35 @@
-const db = require("../configs/postgre");
-const showData = "select u.id, email, ur.role_name from users u join user_role ur on u.role_id=ur.id order by id asc limit 10";
+const usersModel = require("../models/users.model");
 
-const getUsers = (req, res) => {
-    db.query(showData, (err, result) => {
-        if(err) {
-            console.log(err.message);
-            res.status(500).json({
-                msg: "Internal Server Error",
-            });
-            return;
-        }
-        console.log("Connection Database OK");
+const getUsers = async (req, res) => {
+    try {
+        const result = await usersModel.getUsers();
         res.status(200).json({
             data: result.rows,
         });
-    });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal Server Error",
+        });
+    };
+};
+
+const getUserDetails = async (req, res) => {
+    try {
+        const { params } = req;
+        const result = await usersModel.getUserDetails(params);
+        res.status(200).json({
+            data: result.rows,
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal Server Error",
+        });
+    };
 };
 
 module.exports = {
     getUsers,
+    getUserDetails,
 };

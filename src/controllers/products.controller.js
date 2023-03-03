@@ -1,23 +1,70 @@
-const db = require("../configs/postgre");
+const productsModel = require("../models/products.model");
 
-const pick = "p.id, prod_name, price, pc.category";
-const tb = "products p join prod_categories pc on p.category_id = pc.id";
-const showData = `select ${pick} from ${tb}`;
-
-const getProducts = (req, res) => {
-    db.query(showData, (err, result) => {
-        if(err) {
-            res.status(500).json({
-                msg: "Interna Server Error",
-            });
-            return;
-        }
+const getProducts = async (req, res) => {
+    try {
+        const { query } = req;
+        const result = await productsModel.getProducts(query);
         res.status(200).json({
             data: result.rows,
         });
-    });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Interna Server Error",
+        });
+    };
 };
+
+const getProductDetails = async (req, res) => {
+    try {
+        const { params } = req;
+        const result = await productsModel.getDetailProduct(params);
+        res.status(200).json({
+            data: result.rows,
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Interna Server Error",
+        });
+    };
+}
+
+const addProducts = async (req, res) => {
+    try {
+        const { body } = req;
+        const result = await productsModel.addProducts(body);
+        res.status(201).json({
+            data: result.rows,
+            msg: "Add Data Success"
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Interna Server Error",
+        });
+    };
+}
+
+const editProducts = async (req, res) => {
+    try {
+        const { body } = req;
+        const result = await productsModel.editProducts(body);
+        res.status(201).json({
+            data: result.rows,
+            msg: "Add Data Success"
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Interna Server Error",
+        });
+    };
+}
 
 module.exports = {
     getProducts,
+    getProductDetails,
+    addProducts,
+    editProducts,
 };
