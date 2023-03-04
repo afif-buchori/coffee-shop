@@ -4,6 +4,12 @@ const getProducts = async (req, res) => {
     try {
         const { query } = req;
         const result = await productsModel.getProducts(query);
+        if(result.rows.length === 0) {
+            res.status(404).json({
+                msg: "Data Not Found... please don't do it again"
+            });
+            return;
+        }
         res.status(200).json({
             data: result.rows,
         });
@@ -19,6 +25,12 @@ const getProductDetails = async (req, res) => {
     try {
         const { params } = req;
         const result = await productsModel.getProductDetails(params);
+        if(result.rows.length === 0) {
+            res.status(404).json({
+                msg: "Data Not Found... please try other id"
+            });
+            return;
+        }
         res.status(200).json({
             data: result.rows,
         });
@@ -82,7 +94,7 @@ const showProdImage = async (req, res) => {
     try {
         const { params } = req;
         const result = await productsModel.showProdImage(params);
-        res.status(200).static('E:/PICTURE/IMG_0385.JPG');
+        res.status(200).sendFile('E:/PICTURE/IMG_0385.JPG');
     } catch (err) {
         console.log(err.message);
         res.status(500).json({

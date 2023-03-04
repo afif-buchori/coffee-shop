@@ -8,6 +8,6 @@ productsRouter.post("/", productsController.addProducts);
 productsRouter.put("/", productsController.editProducts);
 productsRouter.delete("/delete/:deleteId", productsController.deleteProduct);
 
-productsRouter.get("/image/:productId", productsController.showProdImage);
+productsRouter.get("/image", productsController.showProdImage);
 
 module.exports = productsRouter;
