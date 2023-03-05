@@ -2,7 +2,13 @@ const db = require("../configs/postgre");
 
 const getHistories = (info) => {
     return new Promise((resolve, reject) => {
-        const showData = "SELECT * FROM history";
+        let showData = "SELECT h.id, ub.user_id, display_name, h.product_id, prod_name, price, qty FROM history h JOIN users u ON h.user_id = u.id JOIN user_bio ub ON u.id = ub.user_id JOIN products p ON h.product_id = p.id ";
+        let order = "ORDER BY h.id ASC ";
+        if(info.user) {
+            order = `WHERE ub.user_id = ${info.user} ORDER BY h.id ASC`;
+        }
+        showData += order;
+        console.log(showData);
         db.query(showData, (error, result) => {
             if(error) {
                 reject(error);

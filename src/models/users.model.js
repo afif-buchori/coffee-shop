@@ -2,10 +2,16 @@ const db = require("../configs/postgre");
 
 const getUsers = (info) => {
     return new Promise((resolve, reject) => {
-        let showData = "SELECT id, email, password, phone FROM users ORDER BY id ";
-        let order = "ASC";
-        if(info.order === "desc") {
-            order = "DESC";
+        let showData = "SELECT * FROM users ORDER BY id ";
+        let order = "ASC LIMIT 5 OFFSET 0";
+        if(info.page) {
+            if(info.page == "all") {
+                order = "ASC"
+            } else {
+                let offset = parseInt(info.page);
+                let page = (offset - 1) * 5;
+                order = `ASC LIMIT 5 OFFSET ${page}`;
+            }
         }
         showData += order;
         db.query(showData, (error, result) => {
@@ -38,8 +44,8 @@ const getUserDetails = (info) => {
 const addUsers = (data) => {
     return new Promise((resolve, reject) => {
         // const addData = "INSERT INTO users (email, password, phone) VALUES($1, $2, $3) RETURNING *";
-        const addData = "WITH inserted_user AS (INSERT INTO users (email, password, phone) VALUES($1, $2, $3) RETURNING *), inserted_user_bio AS (INSERT INTO user_bio (display_name) VALUES ('$1') RETURNING *) SELECT * FROM inserted_user, inserted_user_bio";
-        const values = [data.email, data.password, data.phone];
+        const addData = "WITH inserted_user AS (INSERT INTO users (email, password, phone, role_id) VALUES($1, $2, $3, $4) RETURNING *), inserted_user_bio AS (INSERT INTO user_bio (display_name) VALUES ($1) RETURNING *) SELECT * FROM inserted_user, inserted_user_bio";
+        const values = [data.email, data.password, data.phone, data.role_id];
         db.query(addData, values, (error, result) => {
             if(error) {
                 reject(error);
