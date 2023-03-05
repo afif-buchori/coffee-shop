@@ -15,6 +15,9 @@ const getProducts = (info) => {
         if(info.search) {
             showData += `WHERE LOWER(prod_name) LIKE LOWER('%${info.search}%')`;
         }
+        if(info.limit) {
+            showData += `LIMIT ${info.limit}`;
+        }
         console.log(showData);
         db.query(showData, (error, result) => {
             if (error) {

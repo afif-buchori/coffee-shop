@@ -2,7 +2,15 @@ const usersModel = require("../models/users.model");
 
 const getUsers = async (req, res) => {
     try {
-        const result = await usersModel.getUsers();
+        const { query } = req;
+        const result = await usersModel.getUsers(query);
+        if(result.rows.length === 0) {
+            res.status(404).json({
+                msg: "Data Not Found...",
+                data : result.rows,
+            });
+            return;
+        }
         res.status(200).json({
             data: result.rows,
         });
@@ -20,7 +28,7 @@ const getUserDetails = async (req, res) => {
         const result = await usersModel.getUserDetails(params);
         if(result.rows.length === 0) {
             res.status(404).json({
-                msg: "Data Not Found... please try other id"
+                msg: "Data Not Found... please try other id",
             });
             return;
         }
@@ -47,15 +55,16 @@ const addUsers = async (req, res) => {
         console.log(err.message);
         res.status(500).json({
             msg: "Internal Server Error",
+            data: err.detail,
         });
     };
 };
 
 const editUser = async (req, res) => {
     try {
-        const { body } = req;
-        const result = await usersModel.editUser(body);
-        res.status(201).json({
+        const { params, body } = req;
+        const result = await usersModel.editUser(params, body);
+        res.status(200).json({
             msg: "Update Data User Success",
             data: result.rows,
         });
@@ -63,6 +72,7 @@ const editUser = async (req, res) => {
         console.log(err.message);
         res.status(500).json({
             msg: "Internal Server Error",
+            data: err.detail,
         });
     };
 }

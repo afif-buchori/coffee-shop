@@ -1,8 +1,13 @@
 const db = require("../configs/postgre");
 
-const getUsers = () => {
+const getUsers = (info) => {
     return new Promise((resolve, reject) => {
-        const showData = "SELECT id, email, password, phone FROM users ORDER BY id ASC";
+        let showData = "SELECT id, email, password, phone FROM users ORDER BY id ";
+        let order = "ASC";
+        if(info.order === "desc") {
+            order = "DESC";
+        }
+        showData += order;
         db.query(showData, (error, result) => {
             if(error) {
                 reject(error);
@@ -45,10 +50,10 @@ const addUsers = (data) => {
     });
 };
 
-const editUser = (data) => {
+const editUser = (info, data) => {
     return new Promise((resolve, reject) => {
         const editData = "UPDATE user_bio SET display_name = $1, first_name = $2, last_name = $3, address = $4, birth_date = $5, gender = $6, profile_picture = $7 WHERE user_id = $8 RETURNING *";
-        const values = [data.display_name, data.first_name, data.last_name, data.address, data.birth_date, data.gender, data.profile_picture, data.id];
+        const values = [data.display_name, data.first_name, data.last_name, data.address, data.birth_date, data.gender, data.profile_picture, info.userId];
         db.query(editData, values, (error, result) => {
             if(error) {
                 reject(error);

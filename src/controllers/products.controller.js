@@ -6,7 +6,7 @@ const getProducts = async (req, res) => {
         const result = await productsModel.getProducts(query);
         if(result.rows.length === 0) {
             res.status(404).json({
-                msg: "Data Not Found... please don't do it again"
+                msg: "Data Not Found... please don't do it again",
             });
             return;
         }
@@ -16,7 +16,7 @@ const getProducts = async (req, res) => {
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
-            msg: "Interna Server Error",
+            msg: "Interna Server Error...",
         });
     };
 };
@@ -27,7 +27,7 @@ const getProductDetails = async (req, res) => {
         const result = await productsModel.getProductDetails(params);
         if(result.rows.length === 0) {
             res.status(404).json({
-                msg: "Data Not Found... please try other id"
+                msg: `Data ID ${params.productId} Not Found... please try other id`,
             });
             return;
         }
@@ -37,7 +37,7 @@ const getProductDetails = async (req, res) => {
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
-            msg: "Interna Server Error",
+            msg: "Interna Server Error...",
         });
     };
 };
@@ -47,13 +47,14 @@ const addProducts = async (req, res) => {
         const { body } = req;
         const result = await productsModel.addProducts(body);
         res.status(201).json({
+            msg: "Add Data Success...",
             data: result.rows,
-            msg: "Add Data Success"
         });
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
-            msg: "Interna Server Error",
+            msg: "Interna Server Error...",
+            data: err.detail,
         });
     };
 };
@@ -62,14 +63,15 @@ const editProducts = async (req, res) => {
     try {
         const { body } = req;
         const result = await productsModel.editProducts(body);
-        res.status(201).json({
+        res.status(200).json({
+            msg: "Edit Data Success...",
             data: result.rows,
-            msg: "Add Data Success"
         });
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
-            msg: "Internal Server Error",
+            msg: "Internal Server Error...",
+            data: err.detail,
         });
     };
 };
@@ -78,14 +80,19 @@ const deleteProduct = async (req, res) => {
     try {
         const { params } = req;
         const result = await productsModel.deleteProduct(params);
-        res.status(201).json({
-            msg: "DELETE data Success",
-            data: result.rows,
+        if(result.rowCount === 0) {
+            res.status(404).json({
+                msg: `Data ID ${params.deleteId} Not Found... please don't do it again !`,
+            });
+            return;
+        }
+        res.status(200).json({
+            msg: `Delete Data ID ${params.deleteId} Success...`,
         });
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
-            msg: "Internal Server Error",
+            msg: "Internal Server Error...",
         });
     };
 };
@@ -98,7 +105,7 @@ const showProdImage = async (req, res) => {
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
-            msg: "Interna Server Error",
+            msg: "Interna Server Error...",
         });
     };
 };
