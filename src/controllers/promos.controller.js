@@ -62,6 +62,12 @@ const editPromo = async (req, res) => {
     try {
         const { params, body } = req;
         const result = await promosModel.editPromo(params, body);
+        if(result.rowCount === 0) {
+            res.status(404).json({
+                msg: `Edit Fail... ID ${params.promoId} Not Found...`,
+            });
+            return;
+        }
         res.status(200).json({
             msg: "Edit Data Promo Success...",
             data: result.rows,

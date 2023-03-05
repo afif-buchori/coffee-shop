@@ -58,11 +58,11 @@ const addProducts = (data) => {
     });
 };
 
-const editProducts = (data) => {
+const editProducts = (info, data) => {
     return new Promise((resolve, reject) => {
 
         const editData = "UPDATE products SET prod_name = $1, price = $2, category_id = $3 WHERE id = $4 RETURNING *";
-        values = [data.prod_name, data.price, data.category_id, data.id];
+        values = [data.prod_name, data.price, data.category_id, info.productId];
         db.query(editData, values, (error, result) => {
             if(error) {
                 reject(error);
@@ -86,25 +86,10 @@ const deleteProduct = (info) => {
     });
 };
 
-const showProdImage= (info) => {
-    return new Promise((resolve, reject) => {
-        let showData = "SELECT prod_picture FROM products WHERE id = $1";
-        const values = [info.productId];
-        db.query(showData, values, (error, result) => {
-            if (error) {
-                reject(error);
-                return;
-            }
-            resolve(result);
-        });
-    });
-};
-
 module.exports = {
     getProducts,
     getProductDetails,
     addProducts,
     editProducts,
     deleteProduct,
-    showProdImage,
 };
