@@ -8,7 +8,7 @@ const getHistories = async (req, res) => {
             res.status(404).json({
                 msg: "Data Not Found...",
                 data: result.rows,
-            })
+            });
             return;
         }
         res.status(200).json({
@@ -18,7 +18,7 @@ const getHistories = async (req, res) => {
         res.status(500).json ({
             msg: "Internal Server Error",
         });
-    };
+    }
 };
 
 const addHistory = async (req, res) => {
@@ -34,7 +34,7 @@ const addHistory = async (req, res) => {
             msg: "Internal Server Error...",
             data: err.detail,
         });
-    };
+    }
 };
 
 const editHistory =async (req, res) => {
@@ -56,7 +56,7 @@ const editHistory =async (req, res) => {
             msg: "Internal Server Error...",
             data: err.detail,
         });
-    };
+    }
 };
 
 const deleteHistory = async (req, res) => {
@@ -78,8 +78,8 @@ const deleteHistory = async (req, res) => {
             msg: "Internal Server Error...",
             data: err.detail,
         });
-    };
-}
+    }
+};
 
 module.exports = {
     getHistories,

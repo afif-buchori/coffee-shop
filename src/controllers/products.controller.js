@@ -18,7 +18,7 @@ const getProducts = async (req, res) => {
         res.status(500).json({
             msg: "Interna Server Error...",
         });
-    };
+    }
 };
 
 const getProductDetails = async (req, res) => {
@@ -39,7 +39,7 @@ const getProductDetails = async (req, res) => {
         res.status(500).json({
             msg: "Interna Server Error...",
         });
-    };
+    }
 };
 
 const addProducts = async (req, res) => {
@@ -56,7 +56,7 @@ const addProducts = async (req, res) => {
             msg: "Interna Server Error...",
             data: err.detail,
         });
-    };
+    }
 };
 
 const editProducts = async (req, res) => {
@@ -79,7 +79,7 @@ const editProducts = async (req, res) => {
             msg: "Internal Server Error...",
             data: err.detail,
         });
-    };
+    }
 };
 
 const deleteProduct = async (req, res) => {
@@ -100,7 +100,7 @@ const deleteProduct = async (req, res) => {
         res.status(500).json({
             msg: "Internal Server Error...",
         });
-    };
+    }
 };
 
 module.exports = {

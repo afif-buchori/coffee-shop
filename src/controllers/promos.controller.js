@@ -18,7 +18,7 @@ const getPromos = async (req, res) => {
         res.status(500).json({
             msg: "Internal Server Error...",
         });
-    };
+    }
 };
 
 const getPromoDetails = async (req, res) => {
@@ -39,8 +39,8 @@ const getPromoDetails = async (req, res) => {
         res.status(500).json({
             msg: "Internal Server Error...",
         });
-    };
-}
+    }
+};
 
 const addPromo = async (req, res) => {
     try {
@@ -49,13 +49,13 @@ const addPromo = async (req, res) => {
         res.status(201).json({
             msg: "Add Data Promo Success...",
             data: result.rows,
-        })
+        });
     } catch (err) {
         res.status(500).json({
             msg: "Internal Server Error...",
             data: err.detail,
         });
-    };
+    }
 };
 
 const editPromo = async (req, res) => {
@@ -71,13 +71,13 @@ const editPromo = async (req, res) => {
         res.status(200).json({
             msg: "Edit Data Promo Success...",
             data: result.rows,
-        })
+        });
     } catch (err) {
         res.status(500).json({
             msg: "Internal Server Error...",
             data: err.detail,
         });
-    };
+    }
 };
 
 const deletePromo = async (req, res) => {
@@ -93,12 +93,12 @@ const deletePromo = async (req, res) => {
         res.status(200).json({
             msg: `Delete ID ${params.promoId} Data Promo Success...`,
             data: result.rows,
-        })
+        });
     } catch (err) {
         res.status(500).json({
             msg: "Internal Server Error...",
         });
-    };
+    }
 };
 
 module.exports = {

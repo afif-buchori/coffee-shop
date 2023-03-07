@@ -6,7 +6,7 @@ const getUsers = (info) => {
         let order = "ASC LIMIT 5 OFFSET 0";
         if(info.page) {
             if(info.page == "all") {
-                order = "ASC"
+                order = "ASC";
             } else {
                 let offset = parseInt(info.page);
                 let page = (offset - 1) * 5;
@@ -73,8 +73,7 @@ const editUser = (info, data) => {
 const deleteUser = (info) => {
     return new Promise((resolve, reject) => {
         const values = [info.userId];
-        const delData = "DELETE FROM users WHERE id = $1 OR id in (SELECT user_id FROM user_bio WHERE user_id = $1)";
-        // const delData = "DELETE FROM users WHERE id = $1";
+        const delData = "DELETE FROM users WHERE id = $1";
         db.query(delData, values, (error, result) => {
             if (error) {
                 reject(error);
@@ -92,4 +91,4 @@ module.exports = {
     addUsers,
     editUser,
     deleteUser,
-}
+};

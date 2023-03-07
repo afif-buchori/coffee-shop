@@ -19,7 +19,7 @@ const getUsers = async (req, res) => {
         res.status(500).json({
             msg: "Internal Server Error...",
         });
-    };
+    }
 };
 
 const getUserDetails = async (req, res) => {
@@ -40,7 +40,7 @@ const getUserDetails = async (req, res) => {
         res.status(500).json({
             msg: "Internal Server Error...",
         });
-    };
+    }
 };
 
 const addUsers = async (req, res) => {
@@ -57,7 +57,7 @@ const addUsers = async (req, res) => {
             msg: "Internal Server Error...",
             data: err.detail,
         });
-    };
+    }
 };
 
 const editUser = async (req, res) => {
@@ -80,8 +80,8 @@ const editUser = async (req, res) => {
             msg: "Internal Server Error...",
             data: err.detail,
         });
-    };
-}
+    }
+};
 
 const deleteUser = async (req, res) => {
     try {
@@ -102,7 +102,7 @@ const deleteUser = async (req, res) => {
         res.status(500).json({
             msg: "Internal Server Error...",
         });
-    };
+    }
 };
 
 module.exports = {

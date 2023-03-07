@@ -2,11 +2,14 @@ const db = require("../configs/postgre");
 
 const getProducts = (info) => {
     return new Promise((resolve, reject) => {
-        let showData = "SELECT id, prod_name, price, prod_picture FROM products";
+        let showData = "SELECT id, category_id, prod_name, price, prod_picture FROM products";
         let parameters = " ";
         let limit = "LIMIT 5 OFFSET 0";
         if(info.search) {
             parameters += `WHERE LOWER(prod_name) LIKE LOWER('%${info.search}%') `;
+        }
+        if(info.category) {
+            parameters += `WHERE category_id = ${info.category}`;
         }
         if(info.order === "cheapest") {
             parameters += "ORDER BY price ASC ";
@@ -38,7 +41,7 @@ const getProducts = (info) => {
 const getProductDetails =  (info) => {
     return new Promise((resolve, reject) => {
         const showData = "SELECT p.id, prod_name, price, pc.category, prod_picture FROM products p join prod_categories pc ON p.category_id = pc.id WHERE p.id = $1";
-        values = [info.productId];
+        const values = [info.productId];
         db.query(showData, values, (error, result) => {
             if (error) {
                 reject(error);
@@ -46,7 +49,7 @@ const getProductDetails =  (info) => {
             }
             resolve(result);
         });
-    })
+    });
 };
 
 const addProducts = (data) => {
@@ -68,7 +71,7 @@ const editProducts = (info, data) => {
     return new Promise((resolve, reject) => {
 
         const editData = "UPDATE products SET prod_name = $1, price = $2, category_id = $3 WHERE id = $4 RETURNING *";
-        values = [data.prod_name, data.price, data.category_id, info.productId];
+        const values = [data.prod_name, data.price, data.category_id, info.productId];
         db.query(editData, values, (error, result) => {
             if(error) {
                 reject(error);
@@ -76,7 +79,7 @@ const editProducts = (info, data) => {
             }
             resolve(result);
         });
-    })
+    });
 };
 
 const deleteProduct = (info) => {

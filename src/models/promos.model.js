@@ -21,7 +21,7 @@ const getPromos = (info) => {
 const getPromoDetails = (info) => {
     return new Promise((resolve, reject) => {
         const showData = "SELECT po.id, prod_name, price, coupon_code, discount FROM promo po JOIN products pd ON po.product_id = pd.id WHERE po.id = $1";
-        values = [info.promoId];
+        const values = [info.promoId];
         db.query(showData, values, (error, result) => {
             if(error) {
                 reject(error);
