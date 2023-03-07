@@ -2,14 +2,14 @@ const db = require("../configs/postgre");
 
 const getProducts = (info) => {
     return new Promise((resolve, reject) => {
-        let showData = "SELECT id, category_id, prod_name, price, prod_picture FROM products";
+        let showData = "SELECT id, category_id, prod_name, price FROM products";
         let parameters = " ";
         let limit = "LIMIT 5 OFFSET 0";
         if(info.search) {
             parameters += `WHERE LOWER(prod_name) LIKE LOWER('%${info.search}%') `;
         }
         if(info.category) {
-            parameters += `WHERE category_id = ${info.category}`;
+            parameters += `WHERE category_id = ${info.category} `;
         }
         if(info.order === "cheapest") {
             parameters += "ORDER BY price ASC ";
