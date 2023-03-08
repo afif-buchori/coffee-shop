@@ -16,7 +16,7 @@ const getProducts = async (req, res) => {
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
-            msg: "Interna Server Error...",
+            msg: "Internal Server Error...",
         });
     }
 };
@@ -37,7 +37,7 @@ const getProductDetails = async (req, res) => {
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
-            msg: "Interna Server Error...",
+            msg: "Internal Server Error...",
         });
     }
 };
@@ -53,7 +53,7 @@ const addProducts = async (req, res) => {
     } catch (err) {
         console.log(err.message);
         res.status(500).json({
-            msg: "Interna Server Error...",
+            msg: "Internal Server Error...",
             data: err.detail,
         });
     }

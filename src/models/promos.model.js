@@ -47,8 +47,20 @@ const addPromo = (data) => {
 
 const editPromo = (info, data) => {
     return new Promise((resolve, reject) => {
-        const editData = "UPDATE promo SET coupon_code = UPPER($1), discount = $2 WHERE id = $3 RETURNING *";
-        const values = [data.coupon_code, data.discount, info.promoId];
+        // const editData = "UPDATE promo SET coupon_code = UPPER($1), discount = $2 WHERE id = $3 RETURNING *";
+        // const values = [data.coupon_code, data.discount, info.promoId];
+
+        let editData = "UPDATE promo SET ";
+        let values = [];
+        let i = 1;
+        for( const [key, val] of Object.entries(data)) {
+            editData += `${key} = ${val}, `;
+            values.push(val);
+            i++;
+        }
+        editData += `WHERE id = $${i} RETURNING *`;
+        values.push(info.promoId);
+        console.log(editData);
         db.query(editData, values, (error, result) => {
             if(error) {
                 reject(error);

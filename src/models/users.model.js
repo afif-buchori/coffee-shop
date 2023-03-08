@@ -58,8 +58,19 @@ const addUsers = (data) => {
 
 const editUser = (info, data) => {
     return new Promise((resolve, reject) => {
-        const editData = "UPDATE user_bio SET display_name = $1, first_name = $2, last_name = $3, address = $4, birth_date = $5, gender = $6, profile_picture = $7 WHERE user_id = $8 RETURNING *";
-        const values = [data.display_name, data.first_name, data.last_name, data.address, data.birth_date, data.gender, data.profile_picture, info.userId];
+        // const editData = "UPDATE user_bio SET display_name = $1, first_name = $2, last_name = $3, address = $4, birth_date = $5, gender = $6, profile_picture = $7 WHERE user_id = $8 RETURNING *";
+        // const values = [data.display_name, data.first_name, data.last_name, data.address, data.birth_date, data.gender, data.profile_picture, info.userId];
+
+        let editData = "UPDATE user_bio SET ";
+        let values = [];
+        let i = 1;
+        for(const [key, val] of Object.entries(data)) {
+            editData = `${key} = ${val}`;
+            values.push(val);
+            i++;
+        }
+        editData += `WHERE id = $${i} RETURNING *`;
+        console.log(editData);
         db.query(editData, values, (error, result) => {
             if(error) {
                 reject(error);

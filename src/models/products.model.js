@@ -1,3 +1,4 @@
+// const { query } = require("express");
 const db = require("../configs/postgre");
 
 const getProducts = (info) => {
@@ -70,8 +71,21 @@ const addProducts = (data) => {
 const editProducts = (info, data) => {
     return new Promise((resolve, reject) => {
 
-        const editData = "UPDATE products SET prod_name = $1, price = $2, category_id = $3 WHERE id = $4 RETURNING *";
-        const values = [data.prod_name, data.price, data.category_id, info.productId];
+        // const editData = "UPDATE products SET prod_name = $1, price = $2, category_id = $3 WHERE id = $4 RETURNING *";
+        // const values = [data.prod_name, data.price, data.category_id, info.productId];
+
+        let editData = "UPDATE products SET ";
+        let values = [];
+        let i = 1;
+        for(const [key, val] of Object.entries(data)) {
+            editData += `${key} = $${i}, `;
+            values.push(val);
+            i++;
+        }
+        editData = editData.slice(0, -2);
+        editData += `WHERE id = $${i} RETURNING *`;
+        values.push(info.productId);
+        console.log(editData);
         db.query(editData, values, (error, result) => {
             if(error) {
                 reject(error);
