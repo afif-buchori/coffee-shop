@@ -5,6 +5,7 @@ const usersRouter = require("./users.route");
 const productsRouter = require("./products.route");
 const promosRouter = require("./promos.route");
 const historiesRouter = require("./histories.route");
+const authRouter = require("./auth.route");
 
 const masterRouter = Router();
 masterRouter.use("/", welcomeRouter);
@@ -12,5 +13,7 @@ masterRouter.use("/users", usersRouter);
 masterRouter.use("/products", productsRouter);
 masterRouter.use("/promos", promosRouter);
 masterRouter.use("/histories", historiesRouter);
+masterRouter.use("/auth", authRouter);
+
 
 module.exports = masterRouter;
