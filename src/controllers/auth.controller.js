@@ -7,17 +7,28 @@ const { jwtSecret } = require("../configs/environment");
 const login = async (req, res) => {
     try {
         const { body } = req;
-        const result = await authModel.userVerification(body);
+        const result = await authModel.userVerification(body.email);
         if(result.rows.length < 1) {
             res.status(401).json({
                 msg: "Email / Password Salah..",
             });
             return;
         }
-        jwt.sign(result.rows[0], jwtSecret, { expiresIn: "5m" }, (err, token) => {
+        const { id, email, password } = result.rows[0];
+        const isPassValid = await bcrypt.compare(body.password, password);
+        if(result.rows.length < 1 || !isPassValid) {
+            res.status(401).json({
+                msg: "Email / Password Salah..",
+            });
+            return;
+        }
+        const dataUser = { id, email };
+        const jwtOptions = { expiresIn: "5m" };
+        jwt.sign(dataUser, jwtSecret, jwtOptions, (err, token) => {
             if(err) throw token;
             res.status(200).json({
                 msg: "Welcome...",
+                data: result,
                 token,
             });
         });

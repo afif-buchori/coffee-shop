@@ -4,8 +4,8 @@ const { jwtSecret } = require("../configs/environment");
 
 const checkToken = (req, res, next) => {
     const bearerToken = req.header("Authorization");
-    const customHeader = req.header("my-custom-header");
-    console.log(customHeader, bearerToken);
+    // const customHeader = req.header("my-custom-header");
+    // console.log(customHeader, bearerToken);
     if(!bearerToken) return res.status(403).json({
         msg: "Please Login...",
     });
