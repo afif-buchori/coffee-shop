@@ -48,7 +48,7 @@ const login = async (req, res) => {
             });
             return;
         }
-        const { id, email, password } = result.rows[0];
+        const { id, email, password, role_id } = result.rows[0];
         const isPassValid = await bcrypt.compare(body.password, password);
         if(result.rows.length < 1 || !isPassValid) {
             res.status(401).json({
@@ -56,7 +56,7 @@ const login = async (req, res) => {
             });
             return;
         }
-        const dataUser = { id, email };
+        const dataUser = { id, email, role_id };
         const jwtOptions = { expiresIn: "5m" };
         jwt.sign(dataUser, jwtSecret, jwtOptions, (err, token) => {
             if(err) throw token;
@@ -74,9 +74,9 @@ const login = async (req, res) => {
 };
 
 const privateAccess = (req, res) => {
-    const { id, email } = req.authInfo;
+    const { id, email, role_id } = req.authInfo;
     res.status(200).json({
-        payload: { id, email },
+        payload: { id, email, role_id },
         msg: "OK",
     });
 };
@@ -93,7 +93,7 @@ const editPassword = async (req, res) => {
         const hashedPassword = await bcrypt.hash(body.newPassword, 10);
         await authModel.editPassword(hashedPassword, authInfo.id);
         res.status(200).json({
-            msg: "Edit Password Success",
+            msg: "Edit Password Success...",
         });
     } catch(err) {
         console.log(err);
@@ -113,14 +113,14 @@ const forgotPass = async (req, res) => {
             });
         }
         const userId = checkEmail.rows[0].id;
-        const randomChars = "0123456789qwertyuiopASDFGHJKL";
+        const randomChars = "0123456789qwertyuiopASDFGHJKLzXcVbNm";
         let otpCode = "";
         for (let i = 0; i < 5; i++) {
             otpCode += randomChars[Math.floor(Math.random() * randomChars.length)];
         }
         const result = await authModel.forgotPass(userId, otpCode);
         res.status(200).json({
-            msg: "Created OPT Code...",
+            msg: "Created OTP Code...",
             data: result.rows,
         })
     } catch(err) {

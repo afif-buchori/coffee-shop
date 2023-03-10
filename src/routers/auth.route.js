@@ -10,6 +10,7 @@ authRouter.patch("/forgot", authController.forgotPass);
 authRouter.post("/", authController.login);
 
 authRouter.get("/private", authMiddleware.checkToken, authController.privateAccess);
+authRouter.get("/role", authMiddleware.checkToken, authMiddleware.checkRole);
 authRouter.patch("/", authMiddleware.checkToken, authController.editPassword);
 
 module.exports = authRouter;

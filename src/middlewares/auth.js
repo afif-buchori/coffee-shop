@@ -22,6 +22,16 @@ const checkToken = (req, res, next) => {
     });
 };
 
+const checkRole = (req, res, next) => {
+    const { role_id } = req.authInfo;
+    if(role_id === 1) return res.status(403).json({
+        msg: "You don't Have Access..",
+        data: req.authInfo,
+    });
+    next();
+};
+
 module.exports = {
     checkToken,
+    checkRole,
 };

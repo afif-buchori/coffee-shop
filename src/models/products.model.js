@@ -5,12 +5,14 @@ const getProducts = (info) => {
     return new Promise((resolve, reject) => {
         let showData = "SELECT id, category_id, prod_name, price FROM products";
         let parameters = " ";
-        let limit = "LIMIT 5 OFFSET 0";
         if(info.search) {
             parameters += `WHERE LOWER(prod_name) LIKE LOWER('%${info.search}%') `;
         }
         if(info.category) {
-            parameters += `WHERE category_id = ${info.category} `;
+            if(!info.search) {
+                parameters += `WHERE category_id = ${info.category} `;
+            }
+            parameters += `AND category_id = ${info.category} `
         }
         if(info.order === "cheapest") {
             parameters += "ORDER BY price ASC ";
@@ -18,16 +20,13 @@ const getProducts = (info) => {
         if(info.order === "priciest") {
             parameters += "ORDER BY price DESC ";
         }
-        if(info.page) {
-            if(info.page === "all") {
-                limit = "";
-            } else {
-                let offset = parseInt(info.page);
-                let page = (offset - 1) * 5;
-                limit = `LIMIT 5 OFFSET ${page}`;
-            }
+        if(!info.order) {
+            parameters += "ORDER BY id ASC";
         }
-        showData += parameters + limit;
+        const limit = parseInt(info.limit) || 5;
+        const page = parseInt(info.page) || 1;
+        const offset = (page - 1) * limit;
+        showData += `${parameters} LIMIT ${limit} OFFSET ${offset}`;
         console.log(showData);
         db.query(showData, (error, result) => {
             if (error) {
