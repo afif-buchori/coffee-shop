@@ -5,6 +5,8 @@ const authMiddleware = require("../middlewares/auth");
 
 const authRouter = Router();
 
+authRouter.post("/register", authController.register);
+authRouter.patch("/forgot", authController.forgotPass);
 authRouter.post("/", authController.login);
 
 authRouter.get("/private", authMiddleware.checkToken, authController.privateAccess);

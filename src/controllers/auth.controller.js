@@ -1,8 +1,42 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+const db = require("../configs/postgre");
+
 const authModel = require("../models/auth.model");
 const { jwtSecret } = require("../configs/environment");
+
+const register = async (req, res) => {
+    const client = await db.connect();
+    try {
+        const { email, password, phone } = req.body;
+        const result = await authModel.userVerification(email);
+        if(result.rows.length > 1) {
+            res.status(401).json({
+                msg: "Email Already Registered..."
+            });
+            return;
+        }
+        await client.query("BEGIN");
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const data = { email, hashedPassword, phone };
+        const createAccount = await authModel.createAccount(data);
+        const subId = createAccount.rows[0].id;
+        console.log(subId);
+        await authModel.createSubAccount(subId, email);
+        res.status(201).json({
+            msg: "Create Account Success...",
+            data: createAccount.rows,
+        });
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({
+            msg: "Internal Server Error...",
+        });
+    } finally {
+        client.release();
+    }
+};
 
 const login = async (req, res) => {
     try {
@@ -28,7 +62,6 @@ const login = async (req, res) => {
             if(err) throw token;
             res.status(200).json({
                 msg: "Welcome...",
-                data: result,
                 token,
             });
         });
@@ -36,7 +69,7 @@ const login = async (req, res) => {
         console.log(err);
         res.status(500).json({
             msg: "Internal Server Error...",
-        })
+        });
     }
 };
 
@@ -61,6 +94,34 @@ const editPassword = async (req, res) => {
         await authModel.editPassword(hashedPassword, authInfo.id);
         res.status(200).json({
             msg: "Edit Password Success",
+        });
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({
+            msg: "Internal Server Error...",
+        });
+    }
+};
+
+const forgotPass = async (req, res) => {
+    try {
+        const { body } = req;
+        const checkEmail = await authModel.getAccount(body.email);
+        if(checkEmail.rows.length > 1) {
+            res.status(401).json({
+                msg: "Email Not Register..."
+            });
+        }
+        const userId = checkEmail.rows[0].id;
+        const randomChars = "0123456789qwertyuiopASDFGHJKL";
+        let otpCode = "";
+        for (let i = 0; i < 5; i++) {
+            otpCode += randomChars[Math.floor(Math.random() * randomChars.length)];
+        }
+        const result = await authModel.forgotPass(userId, otpCode);
+        res.status(200).json({
+            msg: "Created OPT Code...",
+            data: result.rows,
         })
     } catch(err) {
         console.log(err);
@@ -68,11 +129,12 @@ const editPassword = async (req, res) => {
             msg: "Internal Server Error...",
         })
     }
-
-}
+};
 
 module.exports = {
+    register,
     login,
     privateAccess,
     editPassword,
+    forgotPass,
 };
