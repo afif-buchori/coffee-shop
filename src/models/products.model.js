@@ -38,6 +38,42 @@ const getProducts = (info) => {
     });
 };
 
+const getMetaProducts = (info) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = "SELECT COUNT(*) AS total_data FROM products";
+        db.query(sqlQuery, (error, result) => {
+            if(error) {
+                reject(error);
+                return;
+            }
+            const totalData = parseInt(result.rows[0].total_data);
+            const limit = parseInt(info.limit) || 5;
+            const page = parseInt(info.page) || 1;
+            const totalPage = Math.ceil(totalData / limit);
+            let next = "";
+            let prev = "";
+            if(page < totalPage) {
+                next = `/products?page=${page + 1}&limit=${limit}`;
+            } else {
+                next = null;
+            }
+
+            if(page > 1) {
+                prev = `/products?page=${page - 1}&limit=${limit}`;
+            } else {
+                prev = null;
+            }
+            const meta = {
+                totalData,
+                next,
+                prev,
+                totalPage,
+            }
+            resolve(meta);
+        });
+    });
+};
+
 const getProductDetails =  (info) => {
     return new Promise((resolve, reject) => {
         const showData = "SELECT p.id, prod_name, price, pc.category, prod_picture FROM products p join prod_categories pc ON p.category_id = pc.id WHERE p.id = $1";
@@ -110,6 +146,7 @@ const deleteProduct = (info) => {
 
 module.exports = {
     getProducts,
+    getMetaProducts,
     getProductDetails,
     addProducts,
     editProducts,

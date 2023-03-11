@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
+const morgan = require("morgan");
 const cors = require("cors");
 
 const app = express();
@@ -8,6 +9,7 @@ const app = express();
 const { serverPort } =require("./src/configs/environment")
 const PORT = serverPort || 8080;
 
+app.use(morgan("dev"));
 app.use(cors());
 
 //parser for body
