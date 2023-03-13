@@ -11,7 +11,8 @@ const register = async (req, res) => {
     try {
         const { email, password, phone } = req.body;
         const result = await authModel.userVerification(email);
-        if(result.rows.length > 1) {
+        console.log(result.rows.length);
+        if(result.rows.length == 1) {
             res.status(401).json({
                 msg: "Email Already Registered..."
             });
@@ -20,10 +21,10 @@ const register = async (req, res) => {
         await client.query("BEGIN");
         const hashedPassword = await bcrypt.hash(password, 10);
         const data = { email, hashedPassword, phone };
-        const createAccount = await authModel.createAccount(data);
+        const createAccount = await authModel.createAccount(client, data);
         const subId = createAccount.rows[0].id;
-        console.log(subId);
-        await authModel.createSubAccount(subId, email);
+        await authModel.createSubAccount(client, subId, email);
+        await client.query("COMMIT");
         res.status(201).json({
             msg: "Create Account Success...",
             data: createAccount.rows,
@@ -57,7 +58,7 @@ const login = async (req, res) => {
             return;
         }
         const dataUser = { id, email, role_id };
-        const jwtOptions = { expiresIn: "5m" };
+        const jwtOptions = { expiresIn: "15m" };
         jwt.sign(dataUser, jwtSecret, jwtOptions, (err, token) => {
             if(err) throw token;
             res.status(200).json({
@@ -122,12 +123,51 @@ const forgotPass = async (req, res) => {
         res.status(200).json({
             msg: "Created OTP Code...",
             data: result.rows,
+        });
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({
+            msg: "Internal Server Error...",
+        });
+    }
+};
+
+const editPassbyForgot = async (req, res) => {
+    try {
+        const { body } = req;
+        const checkOtp = await authModel.getUserbyForgot(body);
+        if(checkOtp.rows.length < 1) {
+            res.status(403).json({
+                msg: "Kode OTP Wrong.!",
+            });
+            return;
+        }
+        const userId = checkOtp.rows[0].id;
+        const hashedPassword = await bcrypt.hash(body.password, 10);
+        await authModel.editPassword(hashedPassword, userId);
+        res.status(200).json({
+            msg: "Password Updated..."
+        });
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({
+            msg: "Internal Server Error...",
+        });
+    }
+};
+
+const editProfile = async (req, res) => {
+    try {
+        const result = await authModel.editUserBio(req);
+        res.status(200).json({
+            msg: "Update Success...",
+            data: result.rows,
         })
     } catch(err) {
         console.log(err);
         res.status(500).json({
             msg: "Internal Server Error...",
-        })
+        });
     }
 };
 
@@ -137,4 +177,6 @@ module.exports = {
     privateAccess,
     editPassword,
     forgotPass,
+    editPassbyForgot,
+    editProfile,
 };

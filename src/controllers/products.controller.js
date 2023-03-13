@@ -46,8 +46,7 @@ const getProductDetails = async (req, res) => {
 
 const addProducts = async (req, res) => {
     try {
-        const { body } = req;
-        const result = await productsModel.addProducts(body);
+        const result = await productsModel.addProducts(req);
         res.status(201).json({
             msg: "Add Data Success...",
             data: result.rows,
@@ -63,11 +62,10 @@ const addProducts = async (req, res) => {
 
 const editProducts = async (req, res) => {
     try {
-        const { params, body } = req;
-        const result = await productsModel.editProducts(params, body);
+        const result = await productsModel.editProducts(req);
         if(result.rowCount === 0) {
             res.status(404).json({
-                msg: `Edit Fail... ID ${params.productId} Not Found...`,
+                msg: `Edit Fail... ID ${req.params.productId} Not Found...`,
             });
             return;
         }

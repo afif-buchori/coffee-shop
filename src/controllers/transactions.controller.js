@@ -4,10 +4,6 @@ const transactionsModel = require("../models/transactions.model");
 
 const createTransactions = async (req, res) => {
     const { authInfo, body } = req;
-    // console.log(req);
-    // res.status(200).json({
-    //     ...body,
-    // });
     const client = await db.connect();
     try {
         await client.query("BEGIN");

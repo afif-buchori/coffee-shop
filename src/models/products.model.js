@@ -3,7 +3,7 @@ const db = require("../configs/postgre");
 
 const getProducts = (info) => {
     return new Promise((resolve, reject) => {
-        let showData = "SELECT id, category_id, prod_name, price FROM products";
+        let sqlQuery = "SELECT id, category_id, prod_name, price FROM products";
         let parameters = " ";
         if(info.search) {
             parameters += `WHERE LOWER(prod_name) LIKE LOWER('%${info.search}%') `;
@@ -12,7 +12,7 @@ const getProducts = (info) => {
             if(!info.search) {
                 parameters += `WHERE category_id = ${info.category} `;
             }
-            parameters += `AND category_id = ${info.category} `
+            parameters += `AND category_id = ${info.category} `;
         }
         if(info.order === "cheapest") {
             parameters += "ORDER BY price ASC ";
@@ -26,9 +26,9 @@ const getProducts = (info) => {
         const limit = parseInt(info.limit) || 5;
         const page = parseInt(info.page) || 1;
         const offset = (page - 1) * limit;
-        showData += `${parameters} LIMIT ${limit} OFFSET ${offset}`;
-        console.log(showData);
-        db.query(showData, (error, result) => {
+        sqlQuery += `${parameters} LIMIT ${limit} OFFSET ${offset}`;
+        console.log(sqlQuery);
+        db.query(sqlQuery, (error, result) => {
             if (error) {
                 reject(error);
                 return;
@@ -68,7 +68,7 @@ const getMetaProducts = (info) => {
                 next,
                 prev,
                 totalPage,
-            }
+            };
             resolve(meta);
         });
     });
@@ -76,9 +76,9 @@ const getMetaProducts = (info) => {
 
 const getProductDetails =  (info) => {
     return new Promise((resolve, reject) => {
-        const showData = "SELECT p.id, prod_name, price, pc.category, prod_picture FROM products p join prod_categories pc ON p.category_id = pc.id WHERE p.id = $1";
+        const sqlQuery = "SELECT p.id, prod_name, price, pc.category, prod_picture FROM products p join prod_categories pc ON p.category_id = pc.id WHERE p.id = $1";
         const values = [info.productId];
-        db.query(showData, values, (error, result) => {
+        db.query(sqlQuery, values, (error, result) => {
             if (error) {
                 reject(error);
                 return;
@@ -88,12 +88,16 @@ const getProductDetails =  (info) => {
     });
 };
 
-const addProducts = (data) => {
+const addProducts = (req) => {
     return new Promise((resolve, reject) => {
-
-        const addData = "INSERT INTO products (prod_name, price, category_id) VALUES ($1, $2, $3) RETURNING *";
-        const values = [data.prod_name, data.price, data.category_id];
-        db.query(addData, values, (error, result) => {
+        const { body } = req;
+        const sqlQuery = "INSERT INTO products (prod_name, price, category_id, image) VALUES ($1, $2, $3, $4) RETURNING *";
+        const values = [body.prod_name, body.price, body.category_id];
+        if(req.file) {
+            const fileLink = `/images/${req.file.filename}`;
+            values.push(fileLink);
+        }
+        db.query(sqlQuery, values, (error, result) => {
             if(error) {
                 reject(error);
                 return;
@@ -103,25 +107,25 @@ const addProducts = (data) => {
     });
 };
 
-const editProducts = (info, data) => {
+const editProducts = (req) => {
     return new Promise((resolve, reject) => {
-
-        // const editData = "UPDATE products SET prod_name = $1, price = $2, category_id = $3 WHERE id = $4 RETURNING *";
-        // const values = [data.prod_name, data.price, data.category_id, info.productId];
-
-        let editData = "UPDATE products SET ";
+        const { params, body } = req;
+        let sqlQuery = "UPDATE products SET ";
         let values = [];
         let i = 1;
-        for(const [key, val] of Object.entries(data)) {
-            editData += `${key} = $${i}, `;
+        for(const [key, val] of Object.entries(body)) {
+            sqlQuery += `${key} = $${i}, `;
             values.push(val);
             i++;
         }
-        editData = editData.slice(0, -2);
-        editData += `WHERE id = $${i} RETURNING *`;
-        values.push(info.productId);
-        console.log(editData);
-        db.query(editData, values, (error, result) => {
+        if(req.file) {
+            const fileLink = `/images/products/${req.file.filename}`;
+            sqlQuery += `image = '${fileLink}', `;
+        }
+        sqlQuery += `update_at = NOW() WHERE id = $${i} RETURNING *`;
+        values.push(params.productId);
+        console.log(sqlQuery);
+        db.query(sqlQuery, values, (error, result) => {
             if(error) {
                 reject(error);
                 return;

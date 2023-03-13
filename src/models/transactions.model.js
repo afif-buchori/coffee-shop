@@ -32,7 +32,21 @@ const createDetailTransaction = (client, body, transactionId) => {
 
 const getTransactions = (client, transactionId) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = "SELECT * FROM transactions t JOIN History h ON h.id = t.history_id JOIN products p ON p.id = t.product_id JOIN prod_sizes ps ON ps.id = t.size_id JOIN users u ON u.id = h.user_id JOIN payments py ON py.id = h.payment_id JOIN promo pr ON pr.id = h.promo_id JOIN pay_status sp ON h.pay_status_id = sp.id WHERE h.id = $1";
+        const sqlQuery = `SELECT t.history_id, ub.display_name , h.notes, 
+        t.product_id, p.prod_name, p.price, ps."size", ps."cost", t.qty, t.subtotal, 
+        h.promo_id, pr.coupon_code, pr.discount, d."method" as delivery, d.shipping_price, 
+        py."method" as payments, sp.status 
+        FROM transactions t 
+        JOIN History h ON h.id = t.history_id 
+        JOIN products p ON p.id = t.product_id 
+        JOIN prod_sizes ps ON ps.id = t.size_id 
+        JOIN users u ON u.id = h.user_id 
+        JOIN user_bio ub ON ub.user_id = u.id 
+        JOIN payments py ON py.id = h.payment_id 
+        JOIN promo pr ON pr.id = h.promo_id 
+        JOIN deliveries d ON d.id = h.delivery_id  
+        JOIN pay_status sp ON h.pay_status_id = sp.id 
+        WHERE h.id = $1`;
         client.query(sqlQuery, [transactionId], (error, result) => {
             if(error) return reject(error);
             resolve(result);
