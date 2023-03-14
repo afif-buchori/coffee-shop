@@ -58,9 +58,12 @@ const login = async (req, res) => {
             return;
         }
         const dataUser = { id, email, role_id };
-        const jwtOptions = { expiresIn: "15m" };
-        jwt.sign(dataUser, jwtSecret, jwtOptions, (err, token) => {
+        const expIn = 30;
+        const jwtOptions = { expiresIn: `${expIn}m` };
+        console.log(jwtOptions);
+        jwt.sign(dataUser, jwtSecret, jwtOptions, async (err, token) => {
             if(err) throw token;
+            await authModel.createToken(id, expIn, token);
             res.status(200).json({
                 msg: "Welcome...",
                 token,
@@ -76,6 +79,7 @@ const login = async (req, res) => {
 
 const privateAccess = (req, res) => {
     const { id, email, role_id } = req.authInfo;
+    console.log(req.authInfo);
     res.status(200).json({
         payload: { id, email, role_id },
         msg: "OK",
@@ -83,12 +87,14 @@ const privateAccess = (req, res) => {
 };
 
 const editPassword = async (req, res) => {
-    const { authInfo, body } = req;
-    console.log(authInfo.id);
     try {
+        const { authInfo, body } = req;
+        console.log(authInfo.id);
         const result = await authModel.getPassword(authInfo.id);
         const passFromDb = result.rows[0].password;
-        if(body.oldPassword !== passFromDb) return res.status(403).json({
+        const isPassValid = await bcrypt.compare(body.oldPassword, passFromDb);
+        console.log(isPassValid);
+        if(!isPassValid) return res.status(403).json({
             msg: "Old Password Wrong.!",
         });
         const hashedPassword = await bcrypt.hash(body.newPassword, 10);
@@ -171,6 +177,21 @@ const editProfile = async (req, res) => {
     }
 };
 
+const logout = async (req, res) => {
+    try {
+        console.log(req.authInfo);
+        await authModel.logout(req.authInfo.id);
+        res.status(200).json({
+            msg: "You Have Been Logout..."
+        })
+    } catch(err) {
+        console.log(err);
+        res.status(500).json({
+            msg: "Internal Server Error...",
+        });
+    }
+};
+
 module.exports = {
     register,
     login,
@@ -179,4 +200,5 @@ module.exports = {
     forgotPass,
     editPassbyForgot,
     editProfile,
+    logout,
 };

@@ -18,4 +18,6 @@ authRouter.patch("/", authMiddleware.checkToken, authController.editPassword);
 
 authRouter.patch("/profile", authMiddleware.checkToken, singleUpload("image"), authController.editProfile);
 
+authRouter.patch("/logout", authMiddleware.checkToken, authController.logout);
+
 module.exports = authRouter;

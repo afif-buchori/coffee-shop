@@ -44,7 +44,7 @@ const getPassword = (userId) => {
 
 const editPassword = (newPassword, userId) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = "UPDATE users SET password = $1 WHERE id = $2";
+        const sqlQuery = "UPDATE users SET password = $1, token = NULL, token_expired = NULL WHERE id = $2";
         const values = [newPassword, userId];
         db.query(sqlQuery, values, (error, result) => {
             if(error) return reject(error);
@@ -109,6 +109,39 @@ const editUserBio = (req) => {
     });
 };
 
+const createToken = (userId, expIn, token) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = `UPDATE users SET token = $1, token_expired = NOW() + INTERVAL '${expIn} minutes' WHERE id = $2`;
+        const values = [token, userId];
+        console.log(values);
+        db.query(sqlQuery, values, (error, result) => {
+            if(error) return reject(error);
+            resolve(result);
+        })
+    })
+}
+const compareToken = (userId, token) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = "SELECT * FROM users WHERE id = $1 AND token = $2 AND token_expired > NOW()";
+        const values = [userId, token];
+        db.query(sqlQuery, values, (error, result) => {
+            if(error) return reject(error);
+            resolve(result);
+        });
+    });
+};
+
+const logout = (userId) => {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = "UPDATE users SET token = NULL, token_expired = NULL WHERE id = $1";
+        const values = [userId];
+        db.query(sqlQuery, values, (error, result) => {
+            if(error) return reject(error);
+            resolve(result);
+        });
+    });
+};
+
 // const getUser = (client, userId) => {
 //     return new Promise((resolve, reject) => {
 //         const sqlQuery = "SELECT * FROM users u JOIN user_bio ub ON ub.user_id = u.id WHERE id = $1";
@@ -129,5 +162,8 @@ module.exports = {
     forgotPass,
     getUserbyForgot,
     editUserBio,
+    createToken,
+    compareToken,
+    logout,
     // getUser,
 };
