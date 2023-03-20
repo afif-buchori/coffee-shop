@@ -117,9 +117,9 @@ const createToken = (userId, expIn, token) => {
         db.query(sqlQuery, values, (error, result) => {
             if(error) return reject(error);
             resolve(result);
-        })
-    })
-}
+        });
+    });
+};
 const compareToken = (userId, token) => {
     return new Promise((resolve, reject) => {
         const sqlQuery = "SELECT * FROM users WHERE id = $1 AND token = $2 AND token_expired > NOW()";

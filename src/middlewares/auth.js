@@ -1,4 +1,3 @@
-const authModel = require("../models/auth.model");
 const jwt = require("jsonwebtoken");
 
 const { jwtSecret } = require("../configs/environment");
@@ -28,7 +27,7 @@ const checkToken = (req, res, next) => {
         console.log(err);
         res.status(500).json({
             msg: "Internal server Error",
-        })
+        });
     }
 };
 
