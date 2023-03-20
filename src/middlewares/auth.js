@@ -4,30 +4,13 @@ const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../configs/environment");
 
 const checkToken = (req, res, next) => {
-    // const bearerToken = req.header("Authorization");
-    // const customHeader = req.header("my-custom-header");
-    // console.log(customHeader, bearerToken);
-    // if(!bearerToken) return res.status(403).json({
-    //     msg: "Please Login...",
-    // });
-    // const token = bearerToken.split(" ")[1];
-    // jwt.verify(token, jwtSecret, (err, payload) => {
-    //     if(err && err.name) return res.status(403).json({
-    //         msg: err.message,
-    //     });
-    //     if(err) return res.status(500).json({
-    //         msg: "Internal Server Error...",
-    //     });
-    //     req.authInfo = payload;
-    //     next();
-    // });
     try {
         const bearerToken = req.header("Authorization");
         if(!bearerToken) return res.status(403).json({
             msg: "Please Login...",
         });
         const token = bearerToken.split(" ")[1];
-        jwt.verify(token, jwtSecret, async (err, payload) => {
+        jwt.verify(token, jwtSecret, (err, payload) => {
             if(err && err.name) return res.status(403).json({
                 msg: err.message,
             });
@@ -35,14 +18,14 @@ const checkToken = (req, res, next) => {
                 msg: "Internal Server Error...",
             });
             req.authInfo = payload;
-            const result = await authModel.compareToken(req.authInfo.id, token);
-            if(result.rows < 1) return res.status(403).json({
-                msg: "Token Expired...",
-            });
+            // const result = await authModel.compareToken(req.authInfo.id, token);
+            // if(result.rows < 1) return res.status(403).json({
+            //     msg: "Token Expired...",
+            // });
             next();
         });
     } catch(err) {
-        // console.log(err);
+        console.log(err);
         res.status(500).json({
             msg: "Internal server Error",
         })

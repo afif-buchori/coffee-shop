@@ -61,9 +61,9 @@ const login = async (req, res) => {
         const expIn = 30;
         const jwtOptions = { expiresIn: `${expIn}m` };
         console.log(jwtOptions);
-        jwt.sign(dataUser, jwtSecret, jwtOptions, async (err, token) => {
+        jwt.sign(dataUser, jwtSecret, jwtOptions, (err, token) => {
             if(err) throw token;
-            await authModel.createToken(id, expIn, token);
+            // await authModel.createToken(id, expIn, token);
             res.status(200).json({
                 msg: "Welcome...",
                 token,
@@ -168,7 +168,7 @@ const editProfile = async (req, res) => {
         res.status(200).json({
             msg: "Update Success...",
             data: result.rows,
-        })
+        });
     } catch(err) {
         console.log(err);
         res.status(500).json({
@@ -183,7 +183,7 @@ const logout = async (req, res) => {
         await authModel.logout(req.authInfo.id);
         res.status(200).json({
             msg: "You Have Been Logout..."
-        })
+        });
     } catch(err) {
         console.log(err);
         res.status(500).json({

@@ -7,6 +7,7 @@ const getProducts = async (req, res) => {
         if(result.rows.length === 0) {
             res.status(404).json({
                 msg: "Data Not Found... please don't do it again",
+                data: result.rows,
             });
             return;
         }

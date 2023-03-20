@@ -3,14 +3,14 @@ const db = require("../configs/postgre");
 
 const getProducts = (info) => {
     return new Promise((resolve, reject) => {
-        let sqlQuery = "SELECT id, category_id, prod_name, price FROM products";
+        let sqlQuery = "SELECT id, category_id, prod_name, price, image FROM products WHERE id <> 1";
         let parameters = " ";
         if(info.search) {
-            parameters += `WHERE LOWER(prod_name) LIKE LOWER('%${info.search}%') `;
+            parameters += `AND LOWER(prod_name) LIKE LOWER('%${info.search}%') `;
         }
         if(info.category) {
             if(!info.search) {
-                parameters += `WHERE category_id = ${info.category} `;
+                parameters += `AND category_id = ${info.category} `;
             }
             parameters += `AND category_id = ${info.category} `;
         }
@@ -23,7 +23,7 @@ const getProducts = (info) => {
         if(!info.order) {
             parameters += "ORDER BY id ASC";
         }
-        const limit = parseInt(info.limit) || 5;
+        const limit = parseInt(info.limit) || 12;
         const page = parseInt(info.page) || 1;
         const offset = (page - 1) * limit;
         sqlQuery += `${parameters} LIMIT ${limit} OFFSET ${offset}`;
@@ -47,7 +47,7 @@ const getMetaProducts = (info) => {
                 return;
             }
             const totalData = parseInt(result.rows[0].total_data);
-            const limit = parseInt(info.limit) || 5;
+            const limit = parseInt(info.limit) || 12;
             const page = parseInt(info.page) || 1;
             const totalPage = Math.ceil(totalData / limit);
             let next = "";
@@ -94,7 +94,7 @@ const addProducts = (req) => {
         const sqlQuery = "INSERT INTO products (prod_name, price, category_id, image) VALUES ($1, $2, $3, $4) RETURNING *";
         const values = [body.prod_name, body.price, body.category_id];
         if(req.file) {
-            const fileLink = `/images/${req.file.filename}`;
+            const fileLink = `/images/products/${req.file.filename}`;
             values.push(fileLink);
         }
         db.query(sqlQuery, values, (error, result) => {
