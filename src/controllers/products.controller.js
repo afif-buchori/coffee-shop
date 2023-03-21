@@ -1,5 +1,7 @@
 const productsModel = require("../models/products.model");
 
+const { uploader } = require("../utils/cloudinary");
+
 const getProducts = async (req, res) => {
     try {
         const { query } = req;
@@ -60,6 +62,28 @@ const addProducts = async (req, res) => {
         });
     }
 };
+const insertProduct = async (req, res) => {
+    try {
+        let fileLink = "";
+        if(req.file) {
+            const fileName = req.body.prod_name.replace(/\s/g, "");
+            const upCloud = await uploader(req, "products", fileName );
+            fileLink = upCloud.data.secure_url;
+
+        }
+        const result = await productsModel.insertProduct(req, fileLink);
+        res.status(201).json({
+            msg: "Add Data Success...",
+            data: result.rows,
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal Server Error...",
+            data: err.detail,
+        });
+    }
+};
 
 const editProducts = async (req, res) => {
     try {
@@ -108,6 +132,7 @@ module.exports = {
     getProducts,
     getProductDetails,
     addProducts,
+    insertProduct,
     editProducts,
     deleteProduct,
 };

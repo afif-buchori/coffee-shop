@@ -106,6 +106,20 @@ const addProducts = (req) => {
         });
     });
 };
+const insertProduct = (req, fileLink) => {
+    return new Promise((resolve, reject) => {
+        const { body } = req;
+        const sqlQuery = "INSERT INTO products (prod_name, price, category_id, image) VALUES ($1, $2, $3, $4) RETURNING *";
+        const values = [body.prod_name, body.price, body.category_id, fileLink];
+        db.query(sqlQuery, values, (error, result) => {
+            if(error) {
+                reject(error);
+                return;
+            }
+            resolve(result);
+        });
+    });
+};
 
 const editProducts = (req) => {
     return new Promise((resolve, reject) => {
@@ -153,6 +167,7 @@ module.exports = {
     getMetaProducts,
     getProductDetails,
     addProducts,
+    insertProduct,
     editProducts,
     deleteProduct,
 };
