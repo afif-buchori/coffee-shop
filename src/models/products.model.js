@@ -9,9 +9,9 @@ const getProducts = (info) => {
             parameters += `AND LOWER(prod_name) LIKE LOWER('%${info.search}%') `;
         }
         if(info.category) {
-            if(!info.search) {
-                parameters += `AND category_id = ${info.category} `;
-            }
+            // if(!info.search) {
+            //     parameters += `AND category_id = ${info.category} `;
+            // }
             parameters += `AND category_id = ${info.category} `;
         }
         if(info.order === "cheapest") {
@@ -40,7 +40,14 @@ const getProducts = (info) => {
 
 const getMetaProducts = (info) => {
     return new Promise((resolve, reject) => {
-        const sqlQuery = "SELECT COUNT(*) AS total_data FROM products";
+        console.log(info);
+        let sqlQuery = "SELECT COUNT(*) AS total_data FROM products WHERE id  <> 1";
+        if(info.search) {
+            sqlQuery += ` AND LOWER(prod_name) LIKE LOWER('%${info.search}%')`;
+        }
+        if(info.category) {
+            sqlQuery += ` AND category_id = ${info.category}`;
+        }
         db.query(sqlQuery, (error, result) => {
             if(error) {
                 reject(error);
@@ -87,7 +94,7 @@ const getProductDetails =  (info) => {
         });
     });
 };
-
+// insert for local
 const addProducts = (req) => {
     return new Promise((resolve, reject) => {
         const { body } = req;
@@ -106,6 +113,7 @@ const addProducts = (req) => {
         });
     });
 };
+// insert for cloud
 const insertProduct = (req, fileLink) => {
     return new Promise((resolve, reject) => {
         const { body } = req;
@@ -120,7 +128,7 @@ const insertProduct = (req, fileLink) => {
         });
     });
 };
-
+// edit for local
 const editProducts = (req) => {
     return new Promise((resolve, reject) => {
         const { params, body } = req;
@@ -134,6 +142,33 @@ const editProducts = (req) => {
         }
         if(req.file) {
             const fileLink = `/images/products/${req.file.filename}`;
+            sqlQuery += `image = '${fileLink}', `;
+        }
+        sqlQuery += `update_at = NOW() WHERE id = $${i} RETURNING *`;
+        values.push(params.productId);
+        console.log(sqlQuery);
+        db.query(sqlQuery, values, (error, result) => {
+            if(error) {
+                reject(error);
+                return;
+            }
+            resolve(result);
+        });
+    });
+};
+// edit for cloud
+const editProductCloud = (req, fileLink) => {
+    return new Promise((resolve, reject) => {
+        const { params, body } = req;
+        let sqlQuery = "UPDATE products SET ";
+        let values = [];
+        let i = 1;
+        for(const [key, val] of Object.entries(body)) {
+            sqlQuery += `${key} = $${i}, `;
+            values.push(val);
+            i++;
+        }
+        if(req.file !== "") {
             sqlQuery += `image = '${fileLink}', `;
         }
         sqlQuery += `update_at = NOW() WHERE id = $${i} RETURNING *`;
@@ -167,7 +202,8 @@ module.exports = {
     getMetaProducts,
     getProductDetails,
     addProducts,
-    insertProduct,
     editProducts,
+    insertProduct,
+    editProductCloud,
     deleteProduct,
 };

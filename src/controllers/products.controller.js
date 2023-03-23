@@ -46,7 +46,7 @@ const getProductDetails = async (req, res) => {
         });
     }
 };
-
+// insert for local
 const addProducts = async (req, res) => {
     try {
         const result = await productsModel.addProducts(req);
@@ -62,6 +62,7 @@ const addProducts = async (req, res) => {
         });
     }
 };
+// insert for cloud
 const insertProduct = async (req, res) => {
     try {
         let fileLink = "";
@@ -69,7 +70,6 @@ const insertProduct = async (req, res) => {
             const fileName = req.body.prod_name.replace(/\s/g, "");
             const upCloud = await uploader(req, "products", fileName );
             fileLink = upCloud.data.secure_url;
-
         }
         const result = await productsModel.insertProduct(req, fileLink);
         res.status(201).json({
@@ -84,10 +84,38 @@ const insertProduct = async (req, res) => {
         });
     }
 };
-
+// edit for local
 const editProducts = async (req, res) => {
     try {
         const result = await productsModel.editProducts(req);
+        if(result.rowCount === 0) {
+            res.status(404).json({
+                msg: `Edit Fail... ID ${req.params.productId} Not Found...`,
+            });
+            return;
+        }
+        res.status(200).json({
+            msg: "Edit Data Success...",
+            data: result.rows,
+        });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            msg: "Internal Server Error...",
+            data: err.detail,
+        });
+    }
+};
+// edit for cloud
+const editProductCloud = async (req, res) => {
+    try {
+        let fileLink = "";
+        if(req.file) {
+            const fileName = req.body.prod_name.replace(/\s/g, "");
+            const upCloud = await uploader(req, "products", fileName );
+            fileLink = upCloud.data.secure_url;
+        }
+        const result = await productsModel.editProductCloud(req, fileLink);
         if(result.rowCount === 0) {
             res.status(404).json({
                 msg: `Edit Fail... ID ${req.params.productId} Not Found...`,
@@ -132,7 +160,8 @@ module.exports = {
     getProducts,
     getProductDetails,
     addProducts,
-    insertProduct,
     editProducts,
+    insertProduct,
+    editProductCloud,
     deleteProduct,
 };
