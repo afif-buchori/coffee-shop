@@ -9,9 +9,6 @@ const getProducts = (info) => {
             parameters += `AND LOWER(prod_name) LIKE LOWER('%${info.search}%') `;
         }
         if(info.category) {
-            // if(!info.search) {
-            //     parameters += `AND category_id = ${info.category} `;
-            // }
             parameters += `AND category_id = ${info.category} `;
         }
         if(info.order === "cheapest") {
@@ -48,12 +45,6 @@ const getMetaProducts = (info) => {
         if(info.category) {
             sqlQuery += ` AND category_id = ${info.category}`;
         }
-        if(info.order === "cheapest") {
-            sqlQuery += " ORDER BY price ASC";
-        }
-        if(info.order === "priciest") {
-            sqlQuery += " ORDER BY price DESC";
-        }
         db.query(sqlQuery, (error, result) => {
             if(error) {
                 reject(error);
@@ -83,13 +74,13 @@ const getMetaProducts = (info) => {
             if(page > 1) {
                 prev = `/products?page=${page - 1}&limit=${limit}`;
                 if(info.search) {
-                    next += `&search=${info.search}`;
+                    prev += `&search=${info.search}`;
                 }
                 if(info.category) {
-                    next += `&category=${info.category}`;
+                    prev += `&category=${info.category}`;
                 }
                 if(info.order) {
-                    next += `&order=${info.order}`;
+                    prev += `&order=${info.order}`;
                 }
             } else {
                 prev = null;
