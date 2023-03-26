@@ -48,6 +48,12 @@ const getMetaProducts = (info) => {
         if(info.category) {
             sqlQuery += ` AND category_id = ${info.category}`;
         }
+        if(info.order === "cheapest") {
+            sqlQuery += " ORDER BY price ASC";
+        }
+        if(info.order === "priciest") {
+            sqlQuery += " ORDER BY price DESC";
+        }
         db.query(sqlQuery, (error, result) => {
             if(error) {
                 reject(error);
@@ -61,12 +67,30 @@ const getMetaProducts = (info) => {
             let prev = "";
             if(page < totalPage) {
                 next = `/products?page=${page + 1}&limit=${limit}`;
+                if(info.search) {
+                    next += `&search=${info.search}`;
+                }
+                if(info.category) {
+                    next += `&category=${info.category}`;
+                }
+                if(info.order) {
+                    next += `&order=${info.order}`;
+                }
             } else {
                 next = null;
             }
 
             if(page > 1) {
                 prev = `/products?page=${page - 1}&limit=${limit}`;
+                if(info.search) {
+                    next += `&search=${info.search}`;
+                }
+                if(info.category) {
+                    next += `&category=${info.category}`;
+                }
+                if(info.order) {
+                    next += `&order=${info.order}`;
+                }
             } else {
                 prev = null;
             }
