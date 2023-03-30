@@ -111,7 +111,8 @@ const editProductCloud = async (req, res) => {
   try {
     let fileLink = "";
     if (req.file) {
-      const fileName = req.body.prod_name.replace(/\s/g, "");
+      const fileName =
+        req.body.prod_name.replace(/\s/g, "") || req.params.productId;
       const upCloud = await uploader(req, "products", fileName);
       fileLink = upCloud.data.secure_url;
     }

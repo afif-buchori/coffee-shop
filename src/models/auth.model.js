@@ -88,25 +88,56 @@ const getUserbyForgot = (body) => {
   });
 };
 
-const editUserBio = (req) => {
+const editUser = (client, req) => {
+  return new Promise((resolve, reject) => {
+    let sqlQuery = "UPDATE users SET";
+    let values = [req.authInfo.id];
+    if (req.body.email) {
+      sqlQuery += ` email = '${req.body.email}',`;
+    }
+    if (req.body.phone) {
+      sqlQuery += ` phone = ${req.body.phone}`;
+    }
+    sqlQuery += " WHERE id = $1 RETURNING *";
+    console.log(sqlQuery);
+    client.query(sqlQuery, values, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
+const editUserBio = (client, req, fileLink) => {
   return new Promise((resolve, reject) => {
     let sqlQuery = "UPDATE user_bio SET ";
     let values = [];
     let i = 1;
-    for (const [key, val] of Object.entries(req.body)) {
+    const body = req.body;
+    if (body.email) {
+      delete body.email;
+    }
+    if (body.phone) {
+      delete body.phone;
+    }
+    console.log(body);
+    for (const [key, val] of Object.entries(body)) {
       sqlQuery += `${key} = $${i}, `;
       values.push(val);
       i++;
     }
+    // if (req.file) {
+    //   const fileLink = `/images/users/${req.file.filename}`;
+    //   sqlQuery += `profile_picture = '${fileLink}', `;
+    // }
     if (req.file) {
-      const fileLink = `/images/users/${req.file.filename}`;
       sqlQuery += `profile_picture = '${fileLink}', `;
     }
+
     sqlQuery = sqlQuery.slice(0, -2);
     sqlQuery += ` WHERE user_id = $${i} RETURNING *`;
     values.push(req.authInfo.id);
-    console.log(values);
-    db.query(sqlQuery, values, (error, result) => {
+    console.log(sqlQuery);
+    client.query(sqlQuery, values, (error, result) => {
       if (error) return reject(error);
       resolve(result);
     });
@@ -167,6 +198,7 @@ module.exports = {
   editPassword,
   forgotPass,
   getUserbyForgot,
+  editUser,
   editUserBio,
   createToken,
   compareToken,

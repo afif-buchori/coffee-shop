@@ -6,6 +6,8 @@ const db = require("../configs/postgre");
 const authModel = require("../models/auth.model");
 const { jwtSecret } = require("../configs/environment");
 
+const { uploader } = require("../utils/cloudinary");
+
 const register = async (req, res) => {
   const client = await db.connect();
   try {
@@ -166,17 +168,31 @@ const editPassbyForgot = async (req, res) => {
 };
 
 const editProfile = async (req, res) => {
+  const client = await db.connect();
   try {
-    const result = await authModel.editUserBio(req);
+    if (req.body.email || req.body.phone) {
+      await authModel.editUser(client, req);
+    }
+    await client.query("BEGIN");
+    let fileLink = "";
+    if (req.file) {
+      const fileName = req.authInfo.id;
+      const upCloud = await uploader(req, "user", fileName);
+      fileLink = upCloud.data.secure_url;
+    }
+    const resultUserBio = await authModel.editUserBio(client, req, fileLink);
+    await client.query("COMMIT");
     res.status(200).json({
       msg: "Update Success...",
-      data: result.rows,
+      data: resultUserBio.rows,
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
       msg: "Internal Server Error...",
     });
+  } finally {
+    client.release();
   }
 };
 
