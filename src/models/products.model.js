@@ -21,7 +21,7 @@ const getProducts = (info) => {
     if (!info.order) {
       parameters += "ORDER BY id ASC";
     }
-    const limit = parseInt(info.limit) || 12;
+    const limit = parseInt(info.limit) || 2;
     const page = parseInt(info.page) || 1;
     const offset = (page - 1) * limit;
     sqlQuery += `${parameters} LIMIT ${limit} OFFSET ${offset}`;
@@ -52,7 +52,7 @@ const getMetaProducts = (info) => {
         return;
       }
       const totalData = parseInt(result.rows[0].total_data);
-      const limit = parseInt(info.limit) || 12;
+      const limit = parseInt(info.limit) || 2;
       const page = parseInt(info.page) || 1;
       const totalPage = Math.ceil(totalData / limit);
       let next = "";

@@ -49,7 +49,7 @@ const login = async (req, res) => {
       });
       return;
     }
-    const { id, email, password, role_id } = result.rows[0];
+    const { id, email, password, role_id, profile_picture } = result.rows[0];
     const isPassValid = await bcrypt.compare(body.password, password);
     if (result.rows.length < 1 || !isPassValid) {
       res.status(401).json({
@@ -57,7 +57,7 @@ const login = async (req, res) => {
       });
       return;
     }
-    const dataUser = { id, email, role_id };
+    const dataUser = { id, email, role_id, profile_picture };
     const expIn = 30;
     const jwtOptions = { expiresIn: `${expIn}m` };
     console.log(jwtOptions);
@@ -67,6 +67,7 @@ const login = async (req, res) => {
       res.status(200).json({
         msg: "Welcome...",
         token,
+        dataUser,
       });
     });
   } catch (err) {
