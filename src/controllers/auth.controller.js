@@ -51,7 +51,8 @@ const login = async (req, res) => {
       });
       return;
     }
-    const { id, email, password, role_id, profile_picture } = result.rows[0];
+    const { id, email, password, role_id, profile_picture, phone, address } =
+      result.rows[0];
     const isPassValid = await bcrypt.compare(body.password, password);
     if (result.rows.length < 1 || !isPassValid) {
       res.status(401).json({
@@ -59,8 +60,8 @@ const login = async (req, res) => {
       });
       return;
     }
-    const dataUser = { id, email, role_id, profile_picture };
-    const expIn = 30;
+    const dataUser = { id, email, role_id, profile_picture, phone, address };
+    const expIn = 60;
     const jwtOptions = { expiresIn: `${expIn}m` };
     console.log(jwtOptions);
     jwt.sign(dataUser, jwtSecret, jwtOptions, (err, token) => {
@@ -175,6 +176,7 @@ const editProfile = async (req, res) => {
     }
     await client.query("BEGIN");
     let fileLink = "";
+    console.log(req.file);
     if (req.file) {
       const fileName = req.authInfo.id;
       const upCloud = await uploader(req, "user", fileName);
