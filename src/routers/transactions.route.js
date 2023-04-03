@@ -11,4 +11,10 @@ transactionsRouter.post(
   transactionsController.createTransactions
 );
 transactionsRouter.get("/", checkToken, transactionsController.getHistory);
+transactionsRouter.delete(
+  "/:id",
+  checkToken,
+  transactionsController.deleteTransaction
+);
+
 module.exports = transactionsRouter;

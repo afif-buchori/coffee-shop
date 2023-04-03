@@ -91,13 +91,39 @@ const getHistory = (info) => {
 
 const getHistories = (info) => {
   return new Promise((resolve, reject) => {
-    const sqlQuery = `SELECT t.history_id, p.image, p.prod_name, p.price, t.size_id, 
-        t.qty, d.method  FROM transactions t
-        JOIN history h ON h.id = t.history_id
-        JOIN products p ON p.id = t.product_id
-        JOIN deliveries d ON d.id = h.delivery_id
-        WHERE h.user_id = $1`;
+    const sqlQuery = `SELECT DISTINCT ON (h.id) h.id, d.method, h.created_at, t.product_id, p.prod_name, p.price, p.image
+      FROM history h
+      JOIN deliveries d ON d.id = h.delivery_id
+      JOIN transactions t ON t.history_id = h.id
+      JOIN products p ON p.id = t.product_id
+    WHERE user_id = $1`;
+    // const sqlQuery = `SELECT t.history_id, t.product_id, p.image, p.prod_name, p.price, t.size_id,
+    //     t.qty, d.method  FROM transactions t
+    //     JOIN history h ON h.id = t.history_id
+    //     JOIN products p ON p.id = t.product_id
+    //     JOIN deliveries d ON d.id = h.delivery_id
+    //     WHERE h.user_id = $1`;
     db.query(sqlQuery, [info.id], (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
+const deleteHistory = (client, info) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = "DELETE FROM history WHERE id = $1";
+    client.query(sqlQuery, [info.params.id], (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
+const deleteTransaction = (client, info) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = "DELETE FROM transactions WHERE history_id = $1";
+    client.query(sqlQuery, [info.params.id], (error, result) => {
       if (error) return reject(error);
       resolve(result);
     });
@@ -110,4 +136,6 @@ module.exports = {
   getTransactions,
   getHistory,
   getHistories,
+  deleteHistory,
+  deleteTransaction,
 };

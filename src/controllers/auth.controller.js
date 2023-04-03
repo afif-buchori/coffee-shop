@@ -131,9 +131,10 @@ const forgotPass = async (req, res) => {
       otpCode += randomChars[Math.floor(Math.random() * randomChars.length)];
     }
     const result = await authModel.forgotPass(userId, otpCode);
+    console.log("CODE OTP : ", result.rows[0].code_otp);
     res.status(200).json({
       msg: "Created OTP Code...",
-      data: result.rows,
+      data: result.rows[0].code_otp,
     });
   } catch (err) {
     console.log(err);
