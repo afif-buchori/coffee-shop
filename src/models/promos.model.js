@@ -37,8 +37,14 @@ const getPromoDetails = (info) => {
 const addPromo = (data) => {
   return new Promise((resolve, reject) => {
     const addData =
-      "INSERT INTO promo (product_id, coupon_code, discount) VALUES ($1, UPPER($2), $3) RETURNING *";
-    const values = [data.product_id, data.coupon_code, data.discount];
+      "INSERT INTO promo (product_id, coupon_code, discount, description, expired_at) VALUES ($1, UPPER($2), $3, $4, $5) RETURNING *";
+    const values = [
+      data.product_id,
+      data.coupon_code,
+      data.discount,
+      data.description,
+      data.expired_at,
+    ];
     db.query(addData, values, (error, result) => {
       if (error) {
         reject(error);
@@ -57,13 +63,15 @@ const editPromo = (info, data) => {
     let values = [];
     let i = 1;
     for (const [key, val] of Object.entries(data)) {
-      editData += `${key} = ${val}, `;
+      editData += `${key} = $${i}, `;
       values.push(val);
       i++;
     }
-    editData += `WHERE id = $${i} RETURNING *`;
+    editData = editData.slice(0, -2);
+    editData += ` WHERE id = $${i} RETURNING *`;
     values.push(info.promoId);
     console.log(editData);
+    console.log(values);
     db.query(editData, values, (error, result) => {
       if (error) {
         reject(error);
