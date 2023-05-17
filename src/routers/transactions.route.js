@@ -27,7 +27,7 @@ transactionsRouter.patch(
   "/change-status-order/:id",
   checkToken,
   checkRole,
-  transactionsController.getDoneOrders
+  transactionsController.changeStatusOrders
 );
 transactionsRouter.delete(
   "/:id",

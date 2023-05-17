@@ -159,13 +159,13 @@ const deleteTransaction = async (req, res) => {
       return;
     }
     client.query("COMMIT");
-//     const resultAll = await transactionsModel.deleteTransaction(client, req);
-//     if (resultAll.rowCount === 0) {
-//       res.status(404).json({
-//         msg: "Data Not Found...",
-//       });
-//       return;
-//     }
+    //     const resultAll = await transactionsModel.deleteTransaction(client, req);
+    //     if (resultAll.rowCount === 0) {
+    //       res.status(404).json({
+    //         msg: "Data Not Found...",
+    //       });
+    //       return;
+    //     }
     client.release();
     res.status(200).json({
       msg: "Delete Success...",
