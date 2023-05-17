@@ -118,7 +118,7 @@ const getAllOrder = () => {
     JOIN transactions t ON t.history_id = h.id
     JOIN products p ON p.id = t.product_id
     WHERE h.pay_status_id <> 2
-    ORDER BY h.id ASC`;
+    ORDER BY h.id DESC`;
     db.query(sqlQuery, (error, result) => {
       if (error) return reject(error);
       resolve(result);
