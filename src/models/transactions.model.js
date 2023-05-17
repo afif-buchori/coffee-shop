@@ -91,7 +91,7 @@ const getHistory = (info) => {
 
 const getHistories = (info) => {
   return new Promise((resolve, reject) => {
-    const sqlQuery = `SELECT DISTINCT ON (h.id) h.id, d.method, h.created_at, t.product_id, p.prod_name, p.price, p.image
+    const sqlQuery = `SELECT DISTINCT ON (h.id) h.id, h.pay_status_id, d.method, h.created_at, t.product_id, p.prod_name, p.price, p.image
       FROM history h
       JOIN deliveries d ON d.id = h.delivery_id
       JOIN transactions t ON t.history_id = h.id
@@ -117,6 +117,7 @@ const getAllOrder = () => {
     JOIN deliveries d ON d.id = h.delivery_id
     JOIN transactions t ON t.history_id = h.id
     JOIN products p ON p.id = t.product_id
+    WHERE h.pay_status_id <> 2
     ORDER BY h.id ASC`;
     db.query(sqlQuery, (error, result) => {
       if (error) return reject(error);
