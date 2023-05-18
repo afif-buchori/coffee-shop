@@ -218,7 +218,7 @@ const editProfile = async (req, res) => {
 const loginFirebase = async (req, res) => {
   try {
     const { body } = req;
-    const result = authModel.loginFirebase(body.token_fcm, body.user_id);
+    const result = await authModel.loginFirebase(body.token_fcm, body.user_id);
     res.status(200).json({
       msg: "Login firebase success",
       data: result.rows,
