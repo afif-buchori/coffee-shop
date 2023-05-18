@@ -29,6 +29,7 @@ authRouter.patch(
 );
 
 authRouter.patch("/logout", authMiddleware.checkToken, authController.logout);
+authRouter.patch("/login-firebase", authController.loginFirebase);
 authRouter.delete(
   "/logout",
   authMiddleware.checkToken,

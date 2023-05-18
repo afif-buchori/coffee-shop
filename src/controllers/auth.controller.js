@@ -215,6 +215,22 @@ const editProfile = async (req, res) => {
   }
 };
 
+const loginFirebase = async (req, res) => {
+  try {
+    const { body } = req;
+    const result = authModel.loginFirebase(body.token_fcm, body.user_id);
+    res.status(200).json({
+      msg: "Login firebase success",
+      data: result.rows,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      msg: "Internal Server Error...",
+    });
+  }
+};
+
 const logout = async (req, res) => {
   try {
     console.log(req.authInfo);
@@ -239,4 +255,5 @@ module.exports = {
   editPassbyForgot,
   editProfile,
   logout,
+  loginFirebase,
 };

@@ -179,6 +179,17 @@ const logout = (userId) => {
   });
 };
 
+const loginFirebase = (tokenFcm, userId) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = "UPDATE users SET token_fcm = $1 WHERE id = $2";
+    const values = [tokenFcm, userId];
+    db.query(sqlQuery, values, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
 // const getUser = (client, userId) => {
 //     return new Promise((resolve, reject) => {
 //         const sqlQuery = "SELECT * FROM users u JOIN user_bio ub ON ub.user_id = u.id WHERE id = $1";
@@ -203,5 +214,6 @@ module.exports = {
   createToken,
   compareToken,
   logout,
+  loginFirebase,
   // getUser,
 };
