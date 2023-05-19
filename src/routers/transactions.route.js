@@ -2,6 +2,7 @@ const { Router } = require("express");
 
 const { checkToken, checkRole } = require("../middlewares/auth");
 const transactionsController = require("../controllers/transactions.controller");
+const notificationController = require("../controllers/notification.controller");
 
 const transactionsRouter = Router();
 
@@ -33,6 +34,11 @@ transactionsRouter.delete(
   "/:id",
   checkToken,
   transactionsController.deleteTransaction
+);
+
+transactionsRouter.post(
+  "/notification",
+  notificationController.notificationOrder
 );
 
 module.exports = transactionsRouter;

@@ -169,8 +169,7 @@ const compareToken = (userId, token) => {
 
 const logout = (userId) => {
   return new Promise((resolve, reject) => {
-    const sqlQuery =
-      "UPDATE users SET token = NULL, token_expired = NULL WHERE id = $1";
+    const sqlQuery = "UPDATE users SET token_fcm = NULL WHERE id = $1";
     const values = [userId];
     db.query(sqlQuery, values, (error, result) => {
       if (error) return reject(error);
@@ -190,15 +189,15 @@ const loginFirebase = (tokenFcm, userId) => {
   });
 };
 
-// const getUser = (client, userId) => {
-//     return new Promise((resolve, reject) => {
-//         const sqlQuery = "SELECT * FROM users u JOIN user_bio ub ON ub.user_id = u.id WHERE id = $1";
-//         client.query(sqlQuery, [userId], (error, result) => {
-//             if(error) return reject(error);
-//             resolve(result);
-//         });
-//     });
-// };
+const getUser = (userId) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = "SELECT token_fcm FROM users WHERE id = $1";
+    db.query(sqlQuery, [userId], (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
 
 module.exports = {
   userVerification,
@@ -215,5 +214,5 @@ module.exports = {
   compareToken,
   logout,
   loginFirebase,
-  // getUser,
+  getUser,
 };
