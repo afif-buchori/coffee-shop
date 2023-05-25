@@ -104,38 +104,33 @@ $ npm run dev
 
 ## 𓆙 Route
 
-|--------------------------------------------------------------
-| Method | Endpoint | Remark
-|----------|----------------------------------|----------------
-| ==> USERS |
-| `POST` | /api/auth | Login
-| `POST` | /api/auth/register | Register
-| `PATCH` | /api/auth/logout | Logout
-| `PATCH` | /api/auth/forgot | Forgot pwd (get otp)
-| `PATCH` | /api/auth/editpassbyforgot | Forgot pwd (change pwd)
-| `PATCH` | /api/auth | Change pwd
-| `PATCH` | /api/auth/profile | Edit profile
-| `GET` | /api/users | Get Profile
-|----------|----------------------------------|----------------
-| ==> PRODUCTS |
-| `GET` | /api/products | Get all products
-| `GET` | /api/products/:id | Get details product
-| `POST` | /api/products | Create new product (admin)
-| `PATCH` | /api/products/:id | Edit product (admin)
-| `DELETE` | /api/products/:id | Delete product (admin)
-|----------|----------------------------------|----------------
-| ==> PROMOS |
-| `GET` | /api/promos | Get all promos
-| `POST` | /api/promos | Create new promo
-| `PATCH` | /api/promos/:id | Edit promo
-| `DELETE` | /api/promos/delete/:id | Delete promo
-|----------|----------------------------------|----------------
+| Method           | Endpoint                                  | Remark                     |
+| ---------------- | ----------------------------------------- | -------------------------- |
+| ==> USERS        |
+| `POST`           | /api/auth                                 | Login                      |
+| `POST`           | /api/auth/register                        | Register                   |
+| `PATCH`          | /api/auth/logout                          | Logout                     |
+| `PATCH`          | /api/auth/forgot                          | Forgot pwd (get otp)       |
+| `PATCH`          | /api/auth/editpassbyforgot                | Forgot pwd (change pwd)    |
+| `PATCH`          | /api/auth                                 | Change pwd                 |
+| `PATCH`          | /api/auth/profile                         | Edit profile               |
+| `GET`            | /api/users                                | Get Profile                |
+| ==> PRODUCTS     |
+| `GET`            | /api/products                             | Get all products           |
+| `GET`            | /api/products/:id                         | Get details product        |
+| `POST`           | /api/products                             | Create new product (admin) |
+| `PATCH`          | /api/products/:id                         | Edit product (admin)       |
+| `DELETE`         | /api/products/:id                         | Delete product (admin)     |
+| ==> PROMOS       |
+| `GET`            | /api/promos                               | Get all promos             |
+| `POST`           | /api/promos                               | Create new promo           |
+| `PATCH`          | /api/promos/:id                           | Edit promo                 |
+| `DELETE`         | /api/promos/delete/:id                    | Delete promo               |
 | ==> TRANSACTIONS |
-| `POST` | /api/transactions | Create new transaction
-| `GET` | /api/transactions/get-all-order | Get All pending order
-| `GET` | /api/transactions/get-done-order | Get All pending order
-| `GET` | /api/transactions/change-status-order/:id | Change status order
-|-----------------------------------------------------------------
+| `POST`           | /api/transactions                         | Create new transaction     |
+| `GET`            | /api/transactions/get-all-order           | Get All pending order      |
+| `GET`            | /api/transactions/get-done-order          | Get All pending order      |
+| `GET`            | /api/transactions/change-status-order/:id | Change status order        |
 
 ## 𓆙 Documentation Postman
 
