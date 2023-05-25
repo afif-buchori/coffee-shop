@@ -134,7 +134,7 @@ $ npm run dev
 
 ## 𓆙 Documentation Postman
 
-Click here [POSTMAN](Coffee Shop.postman_collection.json)
+Click here [POSTMAN](./Coffee%20Shop.postman_collection.json)
 
 <BR>
 <BR>
