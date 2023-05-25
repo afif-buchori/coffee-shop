@@ -68,7 +68,7 @@ const getAccount = (email) => {
 const forgotPass = (userId, otpCode) => {
   return new Promise((resolve, reject) => {
     const sqlQuery =
-      "UPDATE users SET code_otp = $1, otp_expired_at = NOW() + INTERVAL '2 minutes' WHERE id = $2 RETURNING id, email, phone, code_otp, otp_expired_at";
+      "UPDATE users SET code_otp = $1, otp_expired_at = NOW() + INTERVAL '4 minutes' WHERE id = $2 RETURNING id, email, phone, code_otp, otp_expired_at";
     db.query(sqlQuery, [otpCode, userId], (error, result) => {
       if (error) return reject(error);
       resolve(result);

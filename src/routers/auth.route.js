@@ -35,5 +35,11 @@ authRouter.delete(
   authMiddleware.checkToken,
   authMiddleware.blacklistToken
 );
+authRouter.patch(
+  "/logout",
+  authMiddleware.checkToken,
+  authMiddleware.blacklistToken,
+  authController.logout
+);
 
 module.exports = authRouter;

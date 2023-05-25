@@ -1,0 +1,818 @@
+{
+	"info": {
+		"_postman_id": "876300d3-7aa9-434c-8c83-46009066894e",
+		"name": "Coffee Shop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin@coffeeshop.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/auth",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBjb2ZmZWVzaG9wLmNvbSIsInJvbGVfaWQiOjIsInByb2ZpbGVfcGljdHVyZSI6bnVsbCwicGhvbmUiOiIwODIyMTEzMzg4MDUiLCJhZGRyZXNzIjpudWxsLCJpYXQiOjE2ODQyNDY2NzYsImV4cCI6MTY4NDI1MDI3Nn0._IB1bhuJgzJtRKJkuQQQBExWvNhSI7DdQ1v5QPmkgrE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "my-custom-header",
+								"value": "123",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/auth/private",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"auth",
+								"private"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/auth/role",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"auth",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "oldPassword",
+									"value": "user",
+									"type": "default"
+								},
+								{
+									"key": "newPassword",
+									"value": "afif",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/auth/",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"auth",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "aaaaa654kufc@gmail.com",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "kuff",
+									"type": "default"
+								},
+								{
+									"key": "phone",
+									"value": "081234369",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/auth/register",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "buchori@gmail.com",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/auth/forgot",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"auth",
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Password by OTP",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "buchori@gmail.com",
+									"type": "default"
+								},
+								{
+									"key": "code_otp",
+									"value": "8qS12",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "afif",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/auth/editpassbyforgot",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"auth",
+								"editpassbyforgot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edite Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/a654k/OneDrive/Gambar/PRODUCTS/zulaikha.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/auth/profile",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZGlzcGxheV9uYW1lIjoiQURNSU4iLCJlbWFpbCI6ImFkbWluQGNvZmZlZXNob3AuY29tIiwicm9sZV9pZCI6MiwicHJvZmlsZV9waWN0dXJlIjpudWxsLCJwaG9uZSI6IjgyMjExMzM4ODA1IiwiYWRkcmVzcyI6bnVsbCwiaWF0IjoxNjg0NTA3MjkzLCJleHAiOjE2ODQ1MTA4OTN9.jWRZOWWm3wXbCvZ4EBwl1OtwXyHvGlWuPnDpVv_xDms",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/auth/logout",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Add Transactions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"promo_id\": 1,\r\n    \"delivery_id\": 1,\r\n    \"payment_id\": 1,\r\n    \"notes\": \"test\",\r\n    \"pay_status_id\": 1,\r\n    \"products\": [\r\n        {\r\n            \"product_id\": 1,\r\n            \"size_id\": 1,\r\n            \"qty\": 3,\r\n            \"subtotal\": 75000\r\n        },\r\n        {\r\n            \"product_id\": 5,\r\n            \"size_id\": 1,\r\n            \"qty\": 2,\r\n            \"subtotal\": 60000\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/transactions",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Pending Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/transactions/get-all-order",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"transactions",
+								"get-all-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Done Order",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/transactions/get-done-order",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"transactions",
+								"get-done-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Status Order",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/transactions/change-status-order/2",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"transactions",
+								"change-status-order",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Notification order done to user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_id",
+									"value": "5",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/transactions/notification",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"transactions",
+								"notification"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Read Products",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/products",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "o",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "cheapest",
+									"description": "cheapest || priciest",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/a654k/OneDrive/Documents/BOOTCAMP/WEEK-1/img/product/cold-brew.png.webp"
+								},
+								{
+									"key": "prod_name",
+									"value": "Cold Brew",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "34000",
+									"type": "default"
+								},
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/products",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBjb2ZmZWVzaG9wLmNvbSIsInJvbGVfaWQiOjIsInByb2ZpbGVfcGljdHVyZSI6bnVsbCwicGhvbmUiOiIwODIyMTEzMzg4MDUiLCJhZGRyZXNzIjpudWxsLCJpYXQiOjE2ODQyNDY2NzYsImV4cCI6MTY4NDI1MDI3Nn0._IB1bhuJgzJtRKJkuQQQBExWvNhSI7DdQ1v5QPmkgrE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/a654k/Downloads/spicy.png"
+								},
+								{
+									"key": "prod_name",
+									"value": "Spicy Chicken",
+									"type": "default"
+								},
+								{
+									"key": "price",
+									"value": "32000",
+									"type": "default"
+								},
+								{
+									"key": "category_id",
+									"value": "3",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/products/16",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"products",
+								"16"
+							],
+							"query": [
+								{
+									"key": "order",
+									"value": "priciest",
+									"description": "price ASC",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "priciest",
+									"description": "price DESC",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/products/15",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"products",
+								"15"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Promo",
+			"item": [
+				{
+					"name": "All Promo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/promos",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"promos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Promo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "product_id",
+									"value": "2",
+									"type": "default"
+								},
+								{
+									"key": "coupon_code",
+									"value": "asdh343asd",
+									"type": "default"
+								},
+								{
+									"key": "discount",
+									"value": "14",
+									"type": "default"
+								},
+								{
+									"key": "description",
+									"value": "coba",
+									"type": "default"
+								},
+								{
+									"key": "expired_at",
+									"value": "2023/05/28",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/promos",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"promos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Promo",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "product_id",
+									"value": "2",
+									"type": "default"
+								},
+								{
+									"key": "coupon_code",
+									"value": "asdh343asd",
+									"type": "default"
+								},
+								{
+									"key": "discount",
+									"value": "16",
+									"type": "default"
+								},
+								{
+									"key": "description",
+									"value": "coba-coba",
+									"type": "default"
+								},
+								{
+									"key": "expired_at",
+									"value": "2023-05-28",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/promos/5",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"promos",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Promo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{COFFEE-DEPLOY}}/promos/delete/6",
+							"host": [
+								"{{COFFEE-DEPLOY}}"
+							],
+							"path": [
+								"promos",
+								"delete",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZGlzcGxheV9uYW1lIjoiVGFtcGlsYW4gTmFtYSIsImVtYWlsIjoic2F5YUBtYWlsLmNvbSIsInJvbGVfaWQiOjEsInByb2ZpbGVfcGljdHVyZSI6Imh0dHBzOi8vcmVzLmNsb3VkaW5hcnkuY29tL2RnOXMydzRuYy9pbWFnZS91cGxvYWQvdjE2ODQ1MDUyNDkvY29mZmVlc2hvcC91c2VyLWltYWdlLTUuanBnIiwicGhvbmUiOiI4MDA3IiwiYWRkcmVzcyI6ImluaSBzZWJ1YWggYWxhbWF0IiwiaWF0IjoxNjg0NTA2MTA0LCJleHAiOjE2ODQ1MDk3MDR9.6u8epCxQMc3uvsozTSkHqIU7HvGmVoZ_2-XtI5QasTc",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

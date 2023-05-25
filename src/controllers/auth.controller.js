@@ -233,7 +233,7 @@ const loginFirebase = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    console.log(req.authInfo);
+    // console.log(req.authInfo);
     await authModel.logout(req.authInfo.id);
     res.status(200).json({
       msg: "You Have Been Logout...",
