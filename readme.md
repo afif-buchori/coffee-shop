@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="#">
-    <img src="./public/logo123.svg" alt="Logo" width="80" height="80">
+    <img src="./src/assets/logo.ico" alt="Logo" width="80" height="80">
   </a>
 
   <h2 align="center">Coffee Shop</h2>
